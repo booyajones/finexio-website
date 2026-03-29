@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ShieldSection() {
   return (
@@ -20,9 +21,7 @@ export default function ShieldSection() {
               <div className="absolute inset-0 rounded-full animate-pulse-ring" style={{ background: "radial-gradient(circle, rgba(22,158,227,0.2), transparent)" }} />
               <div className="relative z-10 w-48 h-48 flex items-center justify-center rounded-full"
                 style={{ background: "linear-gradient(135deg, rgba(22,158,227,0.2), rgba(4,56,134,0.4))", border: "2px solid rgba(253,218,0,0.4)" }}>
-                <svg className="w-24 h-24" style={{ color: "#fdda00" }} fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                </svg>
+                <Image src="/logos/mark-gradient.svg" alt="Finexio Shield" width={96} height={96} />
               </div>
               <motion.div
                 animate={{ y: [0, -8, 0] }}

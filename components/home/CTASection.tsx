@@ -9,9 +9,9 @@ export default function CTASection() {
     <section className="py-24" style={{ background: "#fff" }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
-          initial={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-black mb-6" style={{ color: "#043886" }}>

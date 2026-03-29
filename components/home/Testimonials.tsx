@@ -35,9 +35,9 @@ export default function Testimonials() {
     <section className="py-20" style={{ background: "#F6F9FC" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-14"
         >
@@ -53,16 +53,18 @@ export default function Testimonials() {
           {testimonials.map((t, i) => (
             <motion.div
               key={t.author}
-              initial={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="rounded-2xl p-6 flex flex-col"
               style={{
-                background: "#fff",
-                border: "1px solid #E5E7EB",
-                borderTop: `3px solid #169ee3`,
-                boxShadow: "0 2px 16px rgba(4,56,134,0.06)",
+                background: "rgba(255,255,255,0.75)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: "1px solid #e2e8f0",
+                borderTop: "3px solid #169ee3",
+                boxShadow: "0 4px 24px rgba(4,56,134,0.08)",
               }}
             >
               <Quote className="w-8 h-8 mb-4 opacity-20" style={{ color: "#169ee3" }} />

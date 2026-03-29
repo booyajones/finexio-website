@@ -67,9 +67,9 @@ export default function Features() {
       <section className="py-20" style={{ background: "#F6F9FC" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-14"
           >
@@ -87,9 +87,9 @@ export default function Features() {
               return (
                 <motion.div
                   key={p.title}
-                  initial={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className="rounded-2xl p-6 h-full"
                   style={{
@@ -118,9 +118,9 @@ export default function Features() {
       <section className="py-20" style={{ background: "#fff" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-14"
           >
@@ -138,9 +138,9 @@ export default function Features() {
               return (
                 <motion.div
                   key={o.title}
-                  initial={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   className={`rounded-2xl p-6 ${o.span}`}
                   style={{
@@ -168,9 +168,9 @@ export default function Features() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              initial={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.6 }}
             >
               <span
@@ -204,9 +204,9 @@ export default function Features() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.6 }}
               className="space-y-4"
             >

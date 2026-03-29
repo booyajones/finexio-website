@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import Image from "next/image";
 
 const footerLinks = {
   Solutions: [
@@ -35,14 +36,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2 lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, #043886, #169ee3)" }}>
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                </svg>
-              </div>
-              <span className="font-bold text-xl text-white">Finexio</span>
+            <Link href="/" className="flex items-center mb-4">
+              <Image src="/logos/logo-reversed.svg" alt="Finexio" width={140} height={32} unoptimized />
             </Link>
             <p className="text-sm text-gray-400 mb-4 leading-relaxed">
               B2B payment automation for mid-market finance teams. $5.8B+ processed. J.P. Morgan backed.

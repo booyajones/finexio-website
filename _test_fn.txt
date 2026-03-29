@@ -1,0 +1,9 @@
+import { useEffect } from "react";
+
+function CountUp({
+  end,
+  format,
+}: {
+  end: number;
+  format: (n: number) => string;
+}) {

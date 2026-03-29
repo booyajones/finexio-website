@@ -30,11 +30,11 @@ function CountUp({ to, suffix = "", prefix = "" }: { to: number; suffix?: string
 }
 
 const stats = [
-  { label: "Payment Volume Processed", value: 5.8, suffix: "B+", prefix: "$", display: "$5.8B+" },
-  { label: "Active Buyers", value: 1300, suffix: "+", prefix: "", display: "1,300+" },
-  { label: "Enrolled Suppliers", value: 3000000, suffix: "M+", prefix: "", display: "3M+" },
-  { label: "Partner Customers", value: 4700, suffix: "+", prefix: "", display: "4,700+" },
-  { label: "Partners Lost Since Launch", value: 0, suffix: "", prefix: "", display: "0" },
+  { label: "Payment Volume Processed", value: 6, suffix: "B+", prefix: "$"},
+  { label: "Active Buyers", value: 1300, suffix: "+", prefix: "" },
+  { label: "Enrolled Suppliers", value: 3, suffix: "M+", prefix: "" },
+  { label: "Partner Customers", value: 4700, suffix: "+", prefix: "" },
+  { label: "Partners Lost Since Launch", value: 0, suffix: "", prefix: "" },
 ];
 
 export default function StatsBar() {
@@ -45,7 +45,7 @@ export default function StatsBar() {
           {stats.map((stat, i) => (
             <div key={stat.label} className="text-center">
               <p className="text-3xl font-black text-white mb-1">
-                {stat.display}
+                <CountUp to={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
               </p>
               <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "#adddf5" }}>
                 {stat.label}

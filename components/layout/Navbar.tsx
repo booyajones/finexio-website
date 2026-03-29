@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navigation = [
@@ -63,16 +64,15 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: "linear-gradient(135deg, #043886, #169ee3)" }}>
-            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-            </svg>
-          </div>
-          <span className="font-bold text-xl" style={{ color: scrolled ? "#043886" : "white" }}>
-            Finexio
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image 
+            src={scrolled ? "/logos/logo-color.svg" : "/logos/logo-reversed.svg"} 
+            alt="Finexio" 
+            width={140} 
+            height={32} 
+            priority
+            unoptimized
+          />
         </Link>
         <nav className="hidden lg:flex items-center gap-1">
           {navigation.map((item: NavItem) => (
@@ -123,9 +123,9 @@ export default function Navbar() {
 
         <div className="hidden lg:flex items-center gap-3">
           <Link href="/contact" className="text-sm font-medium px-4 py-2 rounded-lg"
-            style={{ color: scrolled ? "#303941" : "rgba(255,255,255,0.8)" }}>Login</Link>
+            style={{ color: scrolled ? "#303941" : "rgba(255,255,255,0.8)" }}>Log in</Link>
           <Link href="/contact" className="text-sm font-semibold px-5 py-2.5 rounded-xl transition-all hover:scale-105"
-            style={{ background: "#169ee3", color: "white" }}>Get a Demo</Link>
+            style={{ background: "#fdda00", color: "#043886" }}>Get a Demo</Link>
         </div>
 
         <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2 rounded-lg"
@@ -168,7 +168,7 @@ export default function Navbar() {
               <div className="pt-4 flex flex-col gap-3">
                 <Link href="/contact" onClick={() => setMobileOpen(false)}
                   className="w-full text-center py-3 rounded-xl font-semibold"
-                  style={{ background: "#043886", color: "white" }}>
+                  style={{ background: "#fdda00", color: "#043886" }}>
                   Get a Demo
                 </Link>
               </div>
