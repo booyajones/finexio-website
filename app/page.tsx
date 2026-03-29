@@ -1,19 +1,21 @@
 import Hero from "@/components/home/Hero";
 import StatsBar from "@/components/home/StatsBar";
-import LogoCloud from "@/components/home/LogoCloud";
+import LogoBar from "@/components/home/LogoBar";
 import Features from "@/components/home/Features";
 import HowItWorks from "@/components/home/HowItWorks";
+import ShieldSection from "@/components/home/ShieldSection";
+import Stats from "@/components/home/Stats";
 import Testimonials from "@/components/home/Testimonials";
 import CTASection from "@/components/home/CTASection";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AP Payments as a Service | Finexio",
+  title: "Your Team Approves. Finexio Executes. | B2B Payment Automation",
   description:
-    "Finexio manages payment delivery, supplier enablement, fraud prevention, and exceptions — backed by a $1M guarantee. You approve. We handle everything else. Go live in ~60 days.",
+    "Finexio automates accounts payable end-to-end. Virtual card, ACH, and check payments with a $1M fraud guarantee. $5.8B+ processed, J.P. Morgan backed.",
   openGraph: {
-    title: "AP Payments as a Service | Finexio",
-    description: "Your team approves. Finexio executes, protects, and pays you back.",
+    title: "Your Team Approves. Finexio Executes.",
+    description: "Your team approves. Finexio executes, protects, and pays you back. $5.8B+ processed, J.P. Morgan backed.",
     url: "https://finexio.com",
     siteName: "Finexio",
   },
@@ -24,9 +26,11 @@ export default function HomePage() {
     <>
       <Hero />
       <StatsBar />
-      <LogoCloud />
+      <LogoBar />
       <Features />
       <HowItWorks />
+      <ShieldSection />
+      <Stats />
       <Testimonials />
       <CTASection />
     </>
