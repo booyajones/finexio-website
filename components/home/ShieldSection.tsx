@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function ShieldSection() {
   return (
@@ -18,29 +17,45 @@ export default function ShieldSection() {
             viewport={{ once: true }}
             className="flex justify-center"
           >
-            <div className="relative w-80 h-80 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full animate-pulse-ring" style={{ background: "radial-gradient(circle, rgba(22,158,227,0.2), transparent)" }} />
-              <div className="relative z-10 w-48 h-48 flex items-center justify-center rounded-full"
-                style={{ background: "linear-gradient(135deg, rgba(22,158,227,0.2), rgba(4,56,134,0.4))", border: "2px solid rgba(253,218,0,0.4)" }}>
-                <Image src="/logos/mark-gradient.svg" alt="Finexio Shield" width={96} height={96} />
+            <div className="relative">
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: "radial-gradient(circle, rgba(253,218,0,0.15) 0%, transparent 70%)",
+                    filter: "blur(40px)",
+                    transform: "scale(1.4)",
+                  }}
+                />
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative z-10"
+                >
+                  <Image
+                    src="/logos/mark-gradient.svg"
+                    alt="Finexio Shield"
+                    width={280}
+                    height={280}
+                    unoptimized
+                  />
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute top-4 right-0 px-3 py-1.5 rounded-xl text-xs font-bold"
+                  style={{ background: "#fdda00", color: "#043886" }}
+                >
+                  $1,000,000
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute bottom-8 left-0 px-3 py-1.5 rounded-xl text-xs font-bold"
+                  style={{ background: "rgba(22,158,227,0.3)", color: "white", border: "1px solid rgba(22,158,227,0.5)" }}
+                >
+                  SOC 2 Type II
+                </motion.div>
               </div>
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-4 right-4 px-3 py-1.5 rounded-xl text-xs font-bold"
-                style={{ background: "#fdda00", color: "#043886" }}
-              >
-                $1,000,000
-              </motion.div>
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-8 left-4 px-3 py-1.5 rounded-xl text-xs font-bold"
-                style={{ background: "rgba(22,158,227,0.3)", color: "white", border: "1px solid rgba(22,158,227,0.5)" }}
-              >
-                SOC 2 Type II
-              </motion.div>
-            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 30 }}

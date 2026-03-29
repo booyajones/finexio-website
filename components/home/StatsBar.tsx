@@ -43,13 +43,13 @@ export default function StatsBar() {
   return (
     <section style={{ background: "#043886" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 divide-x divide-white/10">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="text-3xl font-black text-white mb-1">
+              <p className="font-black mb-1" style={{ color: "#fdda00", fontSize: "36px" }}>
                 <CountUp end={stat.end} format={stat.format} />
               </p>
-              <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "#adddf5" }}>
+              <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.6)" }}>
                 {stat.label}
               </p>
             </div>

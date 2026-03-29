@@ -32,10 +32,10 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="py-20" style={{ background: "#F6F9FC" }}>
+    <section className="py-20" style={{ background: "#f7f8f9" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.5 }}
@@ -53,7 +53,7 @@ export default function Testimonials() {
           {testimonials.map((t, i) => (
             <motion.div
               key={t.author}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
@@ -62,7 +62,7 @@ export default function Testimonials() {
                 background: "rgba(255,255,255,0.75)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
-                border: "1px solid #e2e8f0",
+                border: "1px solid rgba(4,56,134,0.08)",
                 borderTop: "3px solid #169ee3",
                 boxShadow: "0 4px 24px rgba(4,56,134,0.08)",
               }}
@@ -73,7 +73,7 @@ export default function Testimonials() {
               </p>
               <div
                 className="px-3 py-2 rounded-lg text-xs font-bold mb-4"
-                style={{ background: "#EFF6FF", color: "#043886" }}
+                style={{ background: "rgba(4,56,134,0.06)", color: "#043886" }}
               >
                 📊 {t.stat}
               </div>
