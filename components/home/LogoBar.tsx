@@ -1,16 +1,14 @@
 "use client";
 
 const logos = [
-  "Highgate Hotels",
-  "Texas A&M University",
-  "BirchStreet Systems",
-  "Wyndham Hotels",
-  "ATD",
-  "Aramark",
-  "Pebblebrook Hotels",
-  "Davidson Hospitality",
   "J.P. Morgan",
-  "Coupa Software",
+  "Visa",
+  "Mastercard",
+  "BirchStreet",
+  "JAGGAER",
+  "Unimarket",
+  "PairSoft",
+  "Emburse",
 ];
 
 export default function LogoBar() {
@@ -18,7 +16,7 @@ export default function LogoBar() {
     <section className="py-12" style={{background: "#f7f8f9"}}>
       <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
         <p className="text-sm font-medium uppercase tracking-widest" style={{color: "#169ee3"}}>
-          Trusted by industry leaders
+          Trusted by leading finance teams
         </p>
       </div>
       <div className="relative overflow-hidden">

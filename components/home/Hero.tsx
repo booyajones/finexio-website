@@ -15,19 +15,19 @@ export default function Hero() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
           className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full"
           style={{ background: "radial-gradient(circle, rgba(22,158,227,0.25) 0%, transparent 70%)" }}
         />
         <motion.div
           animate={{ x: [0, -30, 0], y: [0, 40, 0], scale: [1, 1.2, 1] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear", delay: 2 }}
           className="absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full"
           style={{ background: "radial-gradient(circle, rgba(4,56,134,0.5) 0%, transparent 70%)" }}
         />
         <motion.div
           animate={{ x: [0, 20, 0], y: [0, -20, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 4 }}
           className="absolute top-1/3 left-1/3 w-[300px] h-[300px] rounded-full"
           style={{ background: "radial-gradient(circle, rgba(253,218,0,0.08) 0%, transparent 70%)" }}
         />
@@ -61,7 +61,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
@@ -73,7 +73,7 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-xl mb-8 leading-relaxed"
@@ -84,7 +84,7 @@ export default function Hero() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4 mb-10"
@@ -109,9 +109,8 @@ export default function Hero() {
               </Link>
             </motion.div>
 
-            
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
               className="flex flex-wrap items-center gap-x-6 gap-y-2"
@@ -124,7 +123,7 @@ export default function Hero() {
           </div>
           {/* Right column: dashboard card */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 1, x: 0 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"

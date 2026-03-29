@@ -37,7 +37,7 @@ export default function Testimonials() {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
+          viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
           className="text-center mb-14"
         >
@@ -55,16 +55,16 @@ export default function Testimonials() {
               key={t.author}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
+              viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="rounded-2xl p-6 flex flex-col"
               style={{
-                background: "rgba(255,255,255,0.75)",
+                background: "rgba(255,255,255,0.7)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
                 border: "1px solid rgba(4,56,134,0.08)",
-                borderTop: "3px solid #169ee3",
-                boxShadow: "0 4px 24px rgba(4,56,134,0.08)",
+                borderRadius: "20px",
+                boxShadow: "0 8px 32px rgba(4,56,134,0.06)",
               }}
             >
               <Quote className="w-8 h-8 mb-4 opacity-20" style={{ color: "#169ee3" }} />
