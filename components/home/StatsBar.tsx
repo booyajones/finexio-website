@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 
-function CountUp({ to, suffix = "", prefix = "" }: { to: number; suffix?: string; prefix?: string }) {
+function CountUp({
+  end,
+  format,
+}: {
+  end: number;
+  format: (n: number) => string;
+}) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
@@ -12,29 +18,25 @@ function CountUp({ to, suffix = "", prefix = "" }: { to: number; suffix?: string
     if (!inView) return;
     const duration = 1800;
     const steps = 60;
-    const increment = to / steps;
+    const increment = end / steps;
     let current = 0;
     const timer = setInterval(() => {
-      current = Math.min(current + increment, to);
+      current = Math.min(current + increment, end);
       setCount(Math.floor(current));
-      if (current >= to) clearInterval(timer);
+      if (current >= end) clearInterval(timer);
     }, duration / steps);
     return () => clearInterval(timer);
-  }, [inView, to]);
+  }, [inView, end]);
 
-  return (
-    <span ref={ref}>
-      {prefix}{count.toLocaleString()}{suffix}
-    </span>
-  );
+  return <span ref={ref}>{format(count)}</span>;
 }
 
 const stats = [
-  { label: "Payment Volume Processed", value: 6, suffix: "B+", prefix: "$"},
-  { label: "Active Buyers", value: 1300, suffix: "+", prefix: "" },
-  { label: "Enrolled Suppliers", value: 3, suffix: "M+", prefix: "" },
-  { label: "Partner Customers", value: 4700, suffix: "+", prefix: "" },
-  { label: "Partners Lost Since Launch", value: 0, suffix: "", prefix: "" },
+  { label: "Payment Volume Processed", end: 58, format: (n: number) => `${(n / 10).toFixed(1)}B+` },
+  { label: "Active Buyers", end: 1300, format: (n: number) => n.toLocaleString() + "+" },
+  { label: "Enrolled Suppliers", end: 3, format: (n: number) => n + "M+" },
+  { label: "Partner Customers", end: 4700, format: (n: number) => n.toLocaleString() + "+" },
+  { label: "Partners Lost Since Launch", end: 0, format: () => "0" },
 ];
 
 export default function StatsBar() {
@@ -42,10 +44,10 @@ export default function StatsBar() {
     <section style={{ background: "#043886" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          {stats.map((stat, i) => (
+          {stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-3xl font-black text-white mb-1">
-                <CountUp to={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
+                <CountUp end={stat.end} format={stat.format} />
               </p>
               <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "#adddf5" }}>
                 {stat.label}
@@ -54,7 +56,7 @@ export default function StatsBar() {
           ))}
         </div>
         <p className="text-center mt-6 text-xs font-semibold" style={{ color: "rgba(173,221,245,0.6)" }}>
-          Backed by J.P. Morgan · Visa Commercial Partner · SOC 2 Type II Certified
+          Backed by J.P. Morgan &middot; Visa Commercial Partner &middot; SOC 2 Type II Certified
         </p>
       </div>
     </section>

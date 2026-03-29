@@ -1,0 +1,1 @@
+const s1="  { label: "+q+"Payment Volume Processed"+q+", end: 58, format: (n: number) => "+BT+DS+"{(n / 10).toFixed(1)}B+"+BT+" },";

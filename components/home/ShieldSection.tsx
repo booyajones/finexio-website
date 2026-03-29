@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -42,7 +43,7 @@ export default function ShieldSection() {
             </div>
           </motion.div>
           <motion.div
-            initial={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
