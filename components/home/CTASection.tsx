@@ -9,7 +9,7 @@ export default function CTASection() {
     <section className="py-24" style={{ background: "#fff" }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.6 }}
@@ -71,5 +71,6 @@ export default function CTASection() {
     </section>
   );
 }
+
 
 
