@@ -44,10 +44,13 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  console.log("Process version:", process.version);
   return (
     <html lang="en">
       <body className={`${dmSans.variable} font-sans antialiased`}>
+        <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
