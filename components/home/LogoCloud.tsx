@@ -1,44 +1,31 @@
-const logos = [
-  "Highgate Hotels",
-  "Texas A&M University",
-  "American Tire Distributors",
-  "Wyndham Hotels",
-  "Aramark",
-  "Pacific Coast Hospitality",
-  "ACCO Brands",
-  "Highgate Hotels",
-  "Texas A&M University",
-  "American Tire Distributors",
-  "Wyndham Hotels",
-  "Aramark",
-  "Pacific Coast Hospitality",
-  "ACCO Brands",
+"use client";
+
+const partners = [
+  "J.P. Morgan", "Visa", "Mastercard", "BirchStreet", "PairSoft",
+  "Craftable", "JAGGAER", "Unimarket", "Pliant", "Emburse", "Rillion",
 ];
 
 export default function LogoCloud() {
   return (
-    <section className="py-14 overflow-hidden" style={{ background: "#f7f8f9" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-        <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: "#303941", opacity: 0.5 }}>
-          Trusted by leading enterprises
+    <section style={{ background: "#fff", borderBottom: "1px solid #F3F4F6" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <p className="text-center text-xs font-bold uppercase tracking-widest mb-8" style={{ color: "#9CA3AF" }}>
+          Trusted by leading finance teams and procurement platforms
         </p>
-      </div>
-      <div className="relative">
-        {/* Gradient masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, #f7f8f9, transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, #f7f8f9, transparent)" }} />
-        <div className="overflow-hidden">
-          <div className="marquee-track">
-            {logos.map((name, i) => (
-              <div
-                key={`${name}-${i}`}
-                className="flex-shrink-0 mx-4 px-6 py-3 rounded-full text-sm font-semibold whitespace-nowrap"
-                style={{ background: "#ffffff", border: "1px solid #ececec", color: "#303941", boxShadow: "0 1px 4px rgba(4,56,134,0.06)" }}
-              >
-                {name}
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-wrap justify-center items-center gap-3">
+          {partners.map((name) => (
+            <div
+              key={name}
+              className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:shadow-md"
+              style={{
+                background: "#F6F9FC",
+                color: "#043886",
+                border: "1px solid #E5E7EB",
+              }}
+            >
+              {name}
+            </div>
+          ))}
         </div>
       </div>
     </section>

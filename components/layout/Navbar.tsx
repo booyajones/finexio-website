@@ -1,171 +1,179 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Menu, X } from "lucide-react";
 
-const navLinks = [
-  {
-    label: "Solutions",
-    href: "/solutions",
-    children: [
-      { label: "Virtual Card Payments", href: "/solutions#virtual-cards", desc: "Maximize rebates, reduce fraud" },
-      { label: "ACH Automation", href: "/solutions#ach", desc: "Straight-through processing" },
-      { label: "Check Elimination", href: "/solutions#check", desc: "Go paperless overnight" },
-      { label: "Payment Hub", href: "/solutions#hub", desc: "Unified payment intelligence" },
-    ],
-  },
-  {
-    label: "Platform",
-    href: "/platform",
-    children: [
-      { label: "Integration Layer", href: "/platform#integrations", desc: "200+ ERP connectors" },
-      { label: "Payment Execution", href: "/platform#execution", desc: "Multi-rail payment routing" },
-      { label: "Intelligence & Reporting", href: "/platform#reporting", desc: "Real-time analytics" },
-    ],
-  },
-  { label: "Integrations", href: "/platform#integrations", children: [] },
-  {
-    label: "Resources",
-    href: "#",
-    children: [
-      { label: "Case Studies", href: "#", desc: "See real client results" },
-      { label: "ROI Calculator", href: "#", desc: "Estimate your savings" },
-      { label: "Documentation", href: "#", desc: "Developer and user guides" },
-      { label: "Security", href: "#", desc: "SOC 2, PCI DSS, ISO 27001" },
-    ],
-  },
-  { label: "About", href: "/about", children: [] },
+const solutions = [
+  { label: "AP Payments as a Service", href: "/solutions", desc: "Fully managed payment delivery" },
+  { label: "Finexio Shield", href: "/shield", desc: "$1M fraud protection guarantee" },
+  { label: "Supplier Enablement", href: "/solutions#supplier", desc: "AI-powered supplier network" },
+  { label: "Payment Monetization", href: "/solutions#monetization", desc: "Turn AP into revenue" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={
-        scrolled
-          ? { backdropFilter: "blur(12px)", background: "rgba(255,255,255,0.92)", boxShadow: "0 1px 20px rgba(4,56,134,0.08)", borderBottom: "1px solid #ececec" }
-          : { background: "transparent" }
-      }
+      style={{
+        background: scrolled ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.98)",
+        borderBottom: scrolled ? "1px solid #E5E7EB" : "1px solid transparent",
+        backdropFilter: "blur(12px)",
+        boxShadow: scrolled ? "0 1px 12px rgba(4,56,134,0.07)" : "none",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-md flex items-center justify-center" style={{ background: "#169ee3" }}>
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" aria-hidden="true">
-                <path d="M12 3L4 7.5V12C4 16.2 7.4 20.1 12 21C16.6 20.1 20 16.2 20 12V7.5L12 3Z" fill="white" />
-                <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span className="font-black text-xl tracking-tighter" style={{ color: scrolled ? "#043886" : "#ffffff" }}>
-              FINEXIO
-            </span>
-          </Link>
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/finexio-logo-primary.svg"
+            alt="Finexio"
+            width={140}
+            height={36}
+            priority
+            className="h-8 w-auto"
+          />
+        </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <div
-                key={link.label}
-                className="relative"
-                onMouseEnter={() => link.children.length > 0 && setActiveDropdown(link.label)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <Link
-                  href={link.href}
-                  className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all"
-                  style={{ color: scrolled ? "#303941" : "rgba(255,255,255,0.88)" }}
+        {/* Desktop Nav */}
+        <div className="hidden lg:flex items-center gap-1">
+          {/* Solutions dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setSolutionsOpen(true)}
+            onMouseLeave={() => setSolutionsOpen(false)}
+          >
+            <button
+              className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50"
+              style={{ color: "#374151" }}
+            >
+              Solutions <ChevronDown className="w-4 h-4 opacity-60" />
+            </button>
+            <AnimatePresence>
+              {solutionsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full left-0 mt-1 w-72 rounded-xl shadow-xl overflow-hidden"
+                  style={{ background: "#fff", border: "1px solid #E5E7EB" }}
                 >
-                  {link.label}
-                  {link.children.length > 0 && (
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 opacity-50">
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </Link>
-                <AnimatePresence>
-                  {activeDropdown === link.label && link.children.length > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl overflow-hidden"
-                      style={{ boxShadow: "0 20px 60px rgba(4,56,134,0.15)", border: "1px solid #ececec" }}
+                  {solutions.map((s) => (
+                    <Link
+                      key={s.href}
+                      href={s.href}
+                      className="flex flex-col px-4 py-3 hover:bg-blue-50 transition-colors"
                     >
-                      <div className="py-2">
-                        {link.children.map((child) => (
-                          <Link key={child.label} href={child.href} className="flex flex-col px-4 py-3 hover:bg-[#f7f8f9] transition-colors">
-                            <span className="text-sm font-semibold" style={{ color: "#043886" }}>{child.label}</span>
-                            <span className="text-xs mt-0.5 opacity-60" style={{ color: "#303941" }}>{child.desc}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </nav>
-
-          <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="#"
-              className="px-4 py-2 rounded-lg text-sm font-semibold transition-all"
-              style={{ border: scrolled ? "1px solid #ececec" : "1px solid rgba(255,255,255,0.35)", color: scrolled ? "#303941" : "rgba(255,255,255,0.9)" }}
-            >Login</Link>
-            <Link href="/contact" className="px-5 py-2 rounded-lg text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: "#169ee3" }}>
-              Get a Demo
-            </Link>
+                      <span className="text-sm font-semibold" style={{ color: "#043886" }}>{s.label}</span>
+                      <span className="text-xs mt-0.5" style={{ color: "#6B7280" }}>{s.desc}</span>
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          <button className="md:hidden p-2 rounded-lg" style={{ color: scrolled ? "#303941" : "#ffffff" }} onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle navigation">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-              {mobileOpen ? <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /> : <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />}
-            </svg>
-          </button>
+          {[
+            { label: "For CFOs", href: "/for/cfos" },
+            { label: "For Platforms", href: "/platform" },
+            { label: "Pricing", href: "/pricing" },
+            { label: "About", href: "/about" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50"
+              style={{ color: "#374151" }}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
-      </div>
 
+        {/* Desktop CTAs */}
+        <div className="hidden lg:flex items-center gap-3">
+          <Link
+            href="/contact"
+            className="px-4 py-2 text-sm font-medium rounded-lg transition-colors hover:bg-gray-50"
+            style={{ color: "#374151" }}
+          >
+            Log In
+          </Link>
+          <Link
+            href="/get-started"
+            className="px-5 py-2.5 text-sm font-bold rounded-full text-white transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg"
+            style={{
+              background: "linear-gradient(135deg, #169ee3 0%, #043886 100%)",
+              boxShadow: "0 2px 12px rgba(22,158,227,0.3)",
+            }}
+          >
+            See Your Savings →
+          </Link>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="lg:hidden p-2 rounded-lg"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X className="w-5 h-5" style={{ color: "#043886" }} /> : <Menu className="w-5 h-5" style={{ color: "#043886" }} />}
+        </button>
+      </nav>
+
+      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden overflow-hidden bg-white"
-            style={{ borderTop: "1px solid #ececec", boxShadow: "0 20px 40px rgba(4,56,134,0.12)" }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden overflow-hidden"
+            style={{ background: "#fff", borderTop: "1px solid #E5E7EB" }}
           >
             <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <div key={link.label}>
-                  <Link href={link.href} className="block px-4 py-3 rounded-lg text-sm font-semibold" style={{ color: "#043886" }} onClick={() => setMobileOpen(false)}>
-                    {link.label}
-                  </Link>
-                  {link.children.length > 0 && (
-                    <div className="pl-4 mb-1">
-                      {link.children.map((child) => (
-                        <Link key={child.label} href={child.href} className="block px-4 py-2 text-sm" style={{ color: "#303941" }} onClick={() => setMobileOpen(false)}>
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              {[
+                { label: "How It Works", href: "/#how-it-works" },
+                { label: "Solutions", href: "/solutions" },
+                { label: "Finexio Shield", href: "/shield" },
+                { label: "For CFOs", href: "/for/cfos" },
+                { label: "For Platforms", href: "/platform" },
+                { label: "Pricing", href: "/pricing" },
+                { label: "About", href: "/about" },
+                { label: "Contact", href: "/contact" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-blue-50"
+                  style={{ color: "#043886" }}
+                >
+                  {item.label}
+                </Link>
               ))}
-              <div className="pt-4 flex flex-col gap-3" style={{ borderTop: "1px solid #ececec" }}>
-                <Link href="#" className="text-center px-4 py-3 rounded-lg text-sm font-semibold" style={{ border: "1px solid #ececec", color: "#303941" }} onClick={() => setMobileOpen(false)}>Login</Link>
-                <Link href="/contact" className="text-center px-4 py-3 rounded-lg text-sm font-semibold text-white" style={{ background: "#169ee3" }} onClick={() => setMobileOpen(false)}>Get a Demo</Link>
+              <div className="pt-3 border-t mt-3" style={{ borderColor: "#E5E7EB" }}>
+                <Link
+                  href="/get-started"
+                  className="block text-center px-5 py-3 text-sm font-bold rounded-full text-white"
+                  style={{ background: "linear-gradient(135deg, #169ee3 0%, #043886 100%)" }}
+                >
+                  See Your Savings →
+                </Link>
               </div>
             </div>
           </motion.div>
