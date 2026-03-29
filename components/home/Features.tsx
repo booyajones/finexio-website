@@ -69,7 +69,7 @@ export default function Features() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-14"
           >
@@ -89,7 +89,7 @@ export default function Features() {
                   key={p.title}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className="rounded-2xl p-6 h-full"
                   style={{
@@ -120,7 +120,7 @@ export default function Features() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-14"
           >
@@ -140,7 +140,7 @@ export default function Features() {
                   key={o.title}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   className={`rounded-2xl p-6 ${o.span}`}
                   style={{
@@ -170,7 +170,7 @@ export default function Features() {
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0 }}
               transition={{ duration: 0.6 }}
             >
               <span
@@ -206,7 +206,7 @@ export default function Features() {
             <motion.div
               initial={{ opacity: 0, x: 24 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0 }}
               transition={{ duration: 0.6 }}
               className="space-y-4"
             >
@@ -240,3 +240,5 @@ export default function Features() {
     </>
   );
 }
+
+

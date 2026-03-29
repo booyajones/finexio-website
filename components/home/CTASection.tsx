@@ -11,7 +11,7 @@ export default function CTASection() {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-black mb-6" style={{ color: "#043886" }}>
@@ -71,3 +71,5 @@ export default function CTASection() {
     </section>
   );
 }
+
+

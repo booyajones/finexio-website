@@ -37,7 +37,7 @@ export default function Testimonials() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-14"
         >
@@ -55,7 +55,7 @@ export default function Testimonials() {
               key={t.author}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="rounded-2xl p-6 flex flex-col"
               style={{
@@ -87,3 +87,5 @@ export default function Testimonials() {
     </section>
   );
 }
+
+
