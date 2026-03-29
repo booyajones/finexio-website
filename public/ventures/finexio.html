@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finexio — $11B B2B Payments Network</title>
+  <meta name="description" content="Finexio: The B2B payments network The Architecture co-founded from zero to $11B+ annual AP volume. The story, the scale, and the technology.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          ink:{50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a',950:'#020617'},
+          gold:{50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e'}
+        },
+        fontFamily:{serif:['"DM Serif Display"','Georgia','serif'],sans:['"DM Sans"','system-ui','sans-serif'],mono:['"JetBrains Mono"','monospace']}
+      }}
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#FAFAFA;color:#0F172A;-webkit-font-smoothing:antialiased;margin:0}
+    .dot-bg{background-image:radial-gradient(circle,#CBD5E1 1.5px,transparent 1.5px);background-size:28px 28px}
+    .grid-bg{background-image:linear-gradient(to right,#E2E8F0 1px,transparent 1px),linear-gradient(to bottom,#E2E8F0 1px,transparent 1px);background-size:56px 56px}
+    .orb-blue{background:radial-gradient(circle,rgba(37,99,235,.12) 0%,transparent 70%);animation:orbDrift 10s ease-in-out infinite}
+    .orb-cyan{background:radial-gradient(circle,rgba(6,182,212,.09) 0%,transparent 70%);animation:orbDrift 13s ease-in-out infinite reverse}
+    @keyframes orbDrift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(22px,-16px) scale(1.05)}66%{transform:translate(-16px,20px) scale(.97)}}
+    @keyframes auroraShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .aurora-bg{background:linear-gradient(135deg,#ffffff 0%,#eff6ff 30%,#ecfeff 60%,#f0f9ff 100%);background-size:400% 400%;animation:auroraShift 14s ease infinite}
+    .spotlight{position:absolute;inset:0;pointer-events:none;z-index:1;transition:background .15s ease}
+    @keyframes particleDrift{0%,100%{transform:translateY(0) translateX(0);opacity:.55}40%{transform:translateY(-28px) translateX(10px);opacity:.25}75%{transform:translateY(-14px) translateX(-8px);opacity:.45}}
+    .particle{position:absolute;pointer-events:none;border-radius:50%;will-change:transform}
+    @keyframes shimmerBtn{0%{left:-100%}50%{left:160%}100%{left:160%}}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.40s}
+    .nav-glass{background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(226,232,240,.9)}
+    .btn-dark{background:#0F172A;color:#fff;padding:12px 28px;border-radius:10px;font-weight:600;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;position:relative;overflow:hidden}
+    .btn-dark::after{content:'';position:absolute;top:0;left:-100%;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);animation:shimmerBtn 3.5s ease-in-out infinite}
+    .btn-dark:hover{background:#1e293b;transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,23,42,.28)}
+    .btn-blue{background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.28)}
+    .btn-blue:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,99,235,.4)}
+    .btn-outline{background:transparent;color:#0F172A;border:1.5px solid #CBD5E1;padding:13px 28px;border-radius:10px;font-weight:600;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer}
+    .btn-outline:hover{border-color:#0F172A;background:#0F172A;color:#fff}
+    .card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.08)}
+    .stat-card{background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden;transition:all .3s ease}
+    .stat-card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.09)}
+    .tag{display:inline-flex;align-items:center;border-radius:999px;font-size:11px;font-weight:600;padding:3px 12px;letter-spacing:.04em;text-transform:uppercase}
+    .tn{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
+    .te{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
+    .ts{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0}
+    .tg{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+    .slabel{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#2563EB}
+    .process-step{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .process-step:hover{border-color:#93c5fd;box-shadow:0 8px 24px rgba(37,99,235,.08)}
+    .tl-dot{width:10px;height:10px;background:#3b82f6;border:2px solid #fff;box-shadow:0 0 0 3px #bfdbfe;border-radius:50%;flex-shrink:0;margin-top:4px}
+    #mobile-menu{display:none}#mobile-menu.open{display:flex}
+    @media(max-width:768px){.hero-h1{font-size:clamp(2.8rem,12vw,5rem) !important}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="fixed w-full z-50 nav-glass" role="navigation">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="../" class="font-serif text-2xl font-bold text-ink-900" aria-label="Back to The Architecture">CW.</a>
+    <a href="../" class="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink-600 hover:text-ink-900 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Back to Portfolio
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-ink-600">
+      <a href="#overview"    class="hover:text-ink-900 transition-colors">Overview</a>
+      <a href="#problem"     class="hover:text-ink-900 transition-colors">The Problem</a>
+      <a href="#solution"    class="hover:text-ink-900 transition-colors">The Solution</a>
+      <a href="#impact"      class="hover:text-ink-900 transition-colors">Impact</a>
+      <a href="#tech"        class="hover:text-ink-900 transition-colors">Technology</a>
+    </div>
+    <a href="mailto:chris.wyatt@finexio.com" class="btn-dark py-2.5 px-5 text-sm hidden md:inline-flex">Contact Us</a>
+    <button id="hamburger" class="md:hidden p-2 rounded-lg hover:bg-ink-100 transition-colors cursor-pointer" aria-label="Open menu">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="flex-col px-6 pb-5 gap-1 border-t border-ink-100">
+    <a href="../" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">&larr; Back to Portfolio</a>
+    <a href="#problem"  class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">The Problem</a>
+    <a href="#solution" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">The Solution</a>
+    <a href="#impact"   class="py-3 text-sm font-medium text-ink-700 block">Impact</a>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<section id="overview" class="relative min-h-screen flex items-center pt-20 overflow-hidden" aria-label="Finexio overview">
+  <div class="absolute inset-0 dot-bg opacity-60" aria-hidden="true"></div>
+  <div class="absolute inset-0 aurora-bg opacity-70" aria-hidden="true"></div>
+  <div class="absolute top-16 right-10 w-[500px] h-[500px] orb-blue pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute bottom-20 left-8 w-[380px] h-[380px] orb-cyan pointer-events-none" aria-hidden="true"></div>
+  <div class="spotlight" id="hero-spotlight" aria-hidden="true"></div>
+  <div class="particle w-2 h-2 bg-blue-400/35" style="top:20%;left:8%;animation:particleDrift 7s ease-in-out infinite" aria-hidden="true"></div>
+  <div class="particle w-1.5 h-1.5 bg-cyan-400/30" style="top:65%;left:12%;animation:particleDrift 9.5s ease-in-out infinite 1.5s" aria-hidden="true"></div>
+  <div class="particle w-1 h-1 bg-blue-500/45" style="top:32%;right:16%;animation:particleDrift 6.5s ease-in-out infinite 0.7s" aria-hidden="true"></div>
+  <div class="particle w-2 h-2 bg-cyan-300/25" style="top:70%;right:10%;animation:particleDrift 8s ease-in-out infinite 2.5s" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 w-full py-24">
+    <div class="grid lg:grid-cols-12 gap-16 items-center">
+
+      <div class="lg:col-span-7 space-y-8">
+        <div class="reveal d1 flex items-center gap-3">
+          <a href="../" class="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-800 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            The Architecture
+          </a>
+          <span class="text-ink-300" aria-hidden="true">/</span>
+          <span class="slabel">Ventures</span>
+        </div>
+
+        <div class="reveal d2 flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <span class="tag tn">B2B Fintech &middot; Co-Founder &amp; CSO</span>
+        </div>
+
+        <div class="reveal d3">
+          <h1 class="font-serif leading-tight" style="font-size:clamp(3.5rem,9vw,7rem);letter-spacing:-.02em;color:#0F172A">
+            Finexio
+          </h1>
+          <p class="font-serif text-2xl text-blue-700 italic mt-2">The $11B B2B Payments Engine</p>
+        </div>
+
+        <p class="reveal d4 text-lg text-ink-600 leading-relaxed max-w-xl">
+          Co-founded from zero and scaled to <strong class="text-ink-900">$11B+ in annual AP volume</strong>. Finexio digitizes accounts payable for mid-market enterprises&mdash;replacing paper checks with virtual card and ACH payment rails that generate yield from what used to be a pure cost center.
+        </p>
+
+        <div class="reveal d5 flex flex-wrap items-center gap-4">
+          <a href="https://finexio.com" target="_blank" rel="noopener noreferrer" class="btn-blue">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Visit Finexio.com
+          </a>
+          <a href="#problem" class="btn-outline">Read the Story</a>
+        </div>
+      </div>
+
+      <!-- Stats cluster -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="reveal d3 stat-card">
+          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
+          <div class="p-8 grid grid-cols-2 gap-6">
+            <div>
+              <div class="font-serif text-4xl text-ink-900 counter" data-target="11" data-prefix="$" data-suffix="B+">$11B+</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Annual AP Volume</div>
+            </div>
+            <div>
+              <div class="font-serif text-4xl text-blue-700">0 &rarr; 1</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Full Build</div>
+            </div>
+            <div class="col-span-2 pt-4 border-t border-ink-100">
+              <div class="font-serif text-3xl text-emerald-700">98%+</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Check Conversion Rate</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 reveal d4">
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-ink-900">2017</div>
+            <div class="text-xs text-ink-400 mt-0.5">Founded</div>
+          </div>
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-blue-700">VC</div>
+            <div class="text-xs text-ink-400 mt-0.5">Backed</div>
+          </div>
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-ink-900">Exit</div>
+            <div class="text-xs text-ink-400 mt-0.5">In Progress</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- THE PROBLEM -->
+<section id="problem" class="py-28 bg-white" aria-labelledby="h-problem">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <div class="slabel mb-3">The Problem</div>
+        <h2 id="h-problem" class="font-serif text-5xl text-ink-900 leading-tight mb-6">AP Departments Were<br><em class="text-blue-700">Burning Money</em></h2>
+        <p class="text-ink-600 leading-relaxed mb-6">Enterprise accounts payable was stuck in 1985. Paper checks, manual reconciliation, multi-day clearing windows, and zero yield. For Fortune 1000 companies paying thousands of suppliers monthly, this represented hundreds of millions in pure friction and lost opportunity.</p>
+        <p class="text-ink-600 leading-relaxed mb-8">The existing "solutions" required suppliers to adopt new portals, banks to build custom integrations, and AP teams to manage exceptions manually. Nobody was solving the structural problem at the data layer.</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">$3T+ in US B2B payments still processed via paper check</div>
+              <div class="text-xs text-ink-500 mt-0.5">Federal Reserve Payments Study, 2024</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">Average check processing cost: $22&ndash;$50 per transaction</div>
+              <div class="text-xs text-ink-500 mt-0.5">Industry benchmark vs. $0.26 for ACH</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">0% yield generated from AP float vs. potential 1&ndash;2% via virtual card</div>
+              <div class="text-xs text-ink-500 mt-0.5">Massive untapped value in AP departments</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual: before/after -->
+      <div class="reveal d2 space-y-4">
+        <div class="p-6 rounded-2xl bg-red-50 border border-red-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-red-600 mb-4">Before Finexio</div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              Manual check printing, signing, mailing
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              5&ndash;7 day clearing windows
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              Zero yield on AP float
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              Manual exception handling &amp; reconciliation
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              $22&ndash;$50 per payment transaction cost
+            </div>
+          </div>
+        </div>
+        <div class="p-6 rounded-2xl bg-blue-50 border border-blue-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-blue-600 mb-4">After Finexio</div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Automated virtual card &amp; ACH disbursement
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Same-day to next-day clearing
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              1&ndash;2% yield generated from virtual card AP float
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Zero-touch reconciliation via data schema
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              $0.26 per ACH transaction cost
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- THE SOLUTION -->
+<section id="solution" class="py-28 bg-ink-50" aria-labelledby="h-solution">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">The Solution</div>
+      <h2 id="h-solution" class="font-serif text-5xl text-ink-900 leading-tight mb-4">Payment Orchestration<br><em class="text-blue-700">at Enterprise Scale</em></h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full"></div>
+      <p class="text-ink-500 mt-5 max-w-2xl text-lg leading-relaxed">Finexio integrates directly into existing ERP systems and AP workflows&mdash;no supplier enrollment required&mdash;and intelligently routes each payment to the optimal rail based on supplier preference, yield optimization, and transaction cost.</p>
+    </div>
+
+    <!-- How it works -->
+    <div class="grid md:grid-cols-4 gap-4 mb-16">
+      <div class="process-step p-6 reveal d1">
+        <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <span class="font-mono font-bold text-blue-700 text-sm">01</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">ERP Integration</h3>
+        <p class="text-xs text-ink-500 leading-relaxed">Connects natively to SAP, Oracle, NetSuite, and Dynamics. AP files are ingested without workflow changes.</p>
+      </div>
+      <div class="process-step p-6 reveal d2">
+        <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <span class="font-mono font-bold text-blue-700 text-sm">02</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Payment Intelligence</h3>
+        <p class="text-xs text-ink-500 leading-relaxed">Each payment is scored for virtual card eligibility, ACH enrollment, or check fallback. Yield is maximized automatically.</p>
+      </div>
+      <div class="process-step p-6 reveal d3">
+        <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <span class="font-mono font-bold text-blue-700 text-sm">03</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Automated Disbursement</h3>
+        <p class="text-xs text-ink-500 leading-relaxed">Virtual cards issued on-demand, ACH batches cleared same-day. Zero manual intervention on compliant transactions.</p>
+      </div>
+      <div class="process-step p-6 reveal d4">
+        <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <span class="font-mono font-bold text-blue-700 text-sm">04</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Zero-Touch Reconciliation</h3>
+        <p class="text-xs text-ink-500 leading-relaxed">Transaction data is structured against the original AP file. Discrepancies are flagged automatically. No spreadsheet reconciliation.</p>
+      </div>
+    </div>
+
+    <!-- Key differentiation -->
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="card p-7 reveal d1">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">No Supplier Enrollment</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Unlike competitors requiring supplier portals, Finexio handles enrollment silently. The buyer-side experience is the only thing that matters for adoption.</p>
+      </div>
+      <div class="card p-7 reveal d2">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Data Schema Enforcement</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Built a proprietary data schema that enforces compliance rules across regulated payment environments. The schema is the moat&mdash;not the UI.</p>
+      </div>
+      <div class="card p-7 reveal d3">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Revenue-Generating AP</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Converts AP from cost center to profit center. Virtual card interchange creates a new revenue stream that funds the AP department itself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- IMPACT -->
+<section id="impact" class="py-28 bg-white" aria-labelledby="h-impact-fin">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">Proven Results</div>
+      <h2 id="h-impact-fin" class="font-serif text-5xl text-ink-900 leading-tight mb-4">Scale &amp; Impact</h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div class="stat-card p-7 reveal d1 text-center">
+        <div class="font-serif text-5xl text-ink-900 mb-2 counter" data-target="11" data-prefix="$" data-suffix="B+">$11B+</div>
+        <div class="slabel mb-1" style="color:#475569">Annual AP Volume</div>
+        <p class="text-xs text-ink-400 leading-relaxed">Total B2B payment volume orchestrated across enterprise AP departments</p>
+      </div>
+      <div class="stat-card p-7 reveal d2 text-center">
+        <div class="font-serif text-5xl text-blue-700 mb-2">98%+</div>
+        <div class="slabel mb-1" style="color:#475569">Check Conversion</div>
+        <p class="text-xs text-ink-400 leading-relaxed">Eligible paper checks converted to digital payment rails without supplier friction</p>
+      </div>
+      <div class="stat-card p-7 reveal d3 text-center">
+        <div class="font-serif text-5xl text-emerald-700 mb-2 counter" data-target="150" data-prefix="-$" data-suffix="M">-$150M</div>
+        <div class="slabel mb-1" style="color:#475569">Cost Reduction</div>
+        <p class="text-xs text-ink-400 leading-relaxed">Customer AP operational overhead eliminated through automation and digital rails</p>
+      </div>
+      <div class="stat-card p-7 reveal d4 text-center">
+        <div class="font-serif text-5xl text-ink-900 mb-2">1&ndash;2%</div>
+        <div class="slabel mb-1" style="color:#475569">Interchange Yield</div>
+        <p class="text-xs text-ink-400 leading-relaxed">New revenue generated from virtual card interchange on formerly zero-yield AP float</p>
+      </div>
+    </div>
+
+    <!-- The 0-to-1 story -->
+    <div class="bg-ink-900 rounded-2xl p-10 reveal">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <div class="slabel mb-3" style="color:#60a5fa">The 0-to-1 Story</div>
+          <h3 class="font-serif text-3xl text-white mb-4">What Building from Zero Actually Looks Like</h3>
+          <p class="text-ink-400 leading-relaxed mb-6">Building Finexio from concept to $11B in volume required solving three distinct problems simultaneously: regulatory compliance, bank-grade data schema design, and the chicken-and-egg of two-sided network effects (buyers need suppliers, suppliers need buyers).</p>
+          <p class="text-ink-400 leading-relaxed">The insight was to solve the buyer side first&mdash;deploy without supplier friction using silent enrollment&mdash;then build the supplier experience on top of proven volume. This inverted the typical approach and removed the biggest adoption barrier in B2B payments.</p>
+        </div>
+        <div class="space-y-4">
+          <div class="relative pl-12">
+            <div class="absolute left-3.5 top-0 bottom-0 w-px bg-blue-800" aria-hidden="true"></div>
+            <div class="absolute left-0 w-7 h-7 rounded-full bg-blue-900 border-2 border-blue-600 flex items-center justify-center">
+              <span class="font-mono text-blue-300 text-xs">1</span>
+            </div>
+            <div class="bg-ink-800 rounded-xl p-4 border border-ink-700">
+              <div class="font-semibold text-white text-sm mb-1">Schema First</div>
+              <p class="text-xs text-ink-400">Built the regulatory-compliant data schema before writing a single line of UI code. The schema is the product.</p>
+            </div>
+          </div>
+          <div class="relative pl-12">
+            <div class="absolute left-3.5 top-0 bottom-0 w-px bg-blue-800" aria-hidden="true"></div>
+            <div class="absolute left-0 w-7 h-7 rounded-full bg-blue-900 border-2 border-blue-600 flex items-center justify-center">
+              <span class="font-mono text-blue-300 text-xs">2</span>
+            </div>
+            <div class="bg-ink-800 rounded-xl p-4 border border-ink-700">
+              <div class="font-semibold text-white text-sm mb-1">Bank Partner Network</div>
+              <p class="text-xs text-ink-400">Structured bank partnerships to access virtual card issuance and ACH rails without building a bank. Asset-light at scale.</p>
+            </div>
+          </div>
+          <div class="relative pl-12">
+            <div class="absolute left-0 w-7 h-7 rounded-full bg-blue-900 border-2 border-blue-600 flex items-center justify-center">
+              <span class="font-mono text-blue-300 text-xs">3</span>
+            </div>
+            <div class="bg-ink-800 rounded-xl p-4 border border-ink-700">
+              <div class="font-semibold text-white text-sm mb-1">ERP Distribution</div>
+              <p class="text-xs text-ink-400">Embedded inside ERPs as a native module, not a standalone portal. This removed the behavioral change requirement for AP teams.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TECHNOLOGY -->
+<section id="tech" class="py-28 bg-ink-50" aria-labelledby="h-tech">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">Under the Hood</div>
+      <h2 id="h-tech" class="font-serif text-5xl text-ink-900 leading-tight mb-4">Technology Stack</h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="card p-6 reveal d1">
+        <span class="tag tn mb-3">Core Infrastructure</span>
+        <h3 class="font-semibold text-ink-900 mb-2">Proprietary Payment Schema</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">A structured data model that enforces payment routing rules, compliance constraints, and audit trails across all transaction types. The schema validates pre-flight.</p>
+      </div>
+      <div class="card p-6 reveal d2">
+        <span class="tag tn mb-3">Integration Layer</span>
+        <h3 class="font-semibold text-ink-900 mb-2">ERP Native Connectors</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Pre-built, certified integrations for SAP, Oracle Fusion, NetSuite, Dynamics 365, and Sage Intacct. AP files are parsed without middleware.</p>
+      </div>
+      <div class="card p-6 reveal d3">
+        <span class="tag tn mb-3">Payments Rails</span>
+        <h3 class="font-semibold text-ink-900 mb-2">Multi-Rail Orchestration</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Intelligent routing across Visa/Mastercard virtual card, ACH (same-day and standard), and check-to-digital conversion. Rail selection is automated by yield optimization.</p>
+      </div>
+      <div class="card p-6 reveal d4">
+        <span class="tag tn mb-3">Compliance</span>
+        <h3 class="font-semibold text-ink-900 mb-2">Regulatory Framework</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">PCI DSS Level 1, SOC2 Type II, NACHA compliance, and bank-grade AML/KYC built into the transaction schema. Compliance is structural, not bolted on.</p>
+      </div>
+      <div class="card p-6 reveal d5">
+        <span class="tag tn mb-3">Data &amp; AI</span>
+        <h3 class="font-semibold text-ink-900 mb-2">AI-Driven Payment Scoring</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Machine learning models score each payment for optimal rail selection, fraud risk, and yield potential. Models retrain on transaction outcomes continuously.</p>
+      </div>
+      <div class="card p-6 reveal d1" style="background:#EFF6FF;border-color:#BFDBFE">
+        <span class="tag tn mb-3">Future State</span>
+        <h3 class="font-semibold text-ink-900 mb-2">Agentic AP Processing</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">The next phase: LLM agents that handle invoice disputes, supplier onboarding exceptions, and approval workflow exceptions without human intervention.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="py-24 bg-blue-700 relative overflow-hidden" aria-label="Call to action">
+  <div class="absolute inset-0 grid-bg opacity-10" aria-hidden="true"></div>
+  <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+    <div class="reveal">
+      <p class="text-blue-200 text-sm font-semibold tracking-widest uppercase mb-4">Built by The Architecture</p>
+      <h2 class="font-serif text-4xl text-white mb-6">Want to Build Something<br>Like This?</h2>
+      <p class="text-blue-200 text-lg mb-8 leading-relaxed">Available for executive advisory, co-founder roles, and board positions in B2B fintech and payments infrastructure.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="mailto:chris.wyatt@finexio.com" class="btn-dark bg-white text-ink-900 hover:bg-ink-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Contact The Architecture
+        </a>
+        <a href="../" class="btn-outline border-white/30 text-white hover:bg-white hover:text-blue-700">Back to Portfolio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="py-10 px-6" style="background:#020617" role="contentinfo">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <a href="../" class="font-serif text-xl text-white">CW.</a>
+    <div class="flex gap-6 text-sm text-ink-500">
+      <a href="../#ventures" class="hover:text-white transition-colors">All Ventures</a>
+      <a href="../#impact"   class="hover:text-white transition-colors">Impact</a>
+      <a href="parasail.html" class="hover:text-white transition-colors">Parasail Health</a>
+      <a href="prompt-master.html" class="hover:text-white transition-colors">prompt-master</a>
+    </div>
+    <div class="text-xs text-ink-600">&copy; 2026 The Architecture</div>
+  </div>
+</footer>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const mob = document.getElementById('mobile-menu');
+  ham.addEventListener('click', () => mob.classList.toggle('open'));
+  mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mob.classList.remove('open')));
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  setTimeout(() => document.querySelectorAll('#overview .reveal').forEach(el => el.classList.add('visible')), 100);
+
+  function runCounter(el) {
+    const target = parseFloat(el.dataset.target);
+    const prefix = el.dataset.prefix||'', suffix = el.dataset.suffix||'';
+    const dur=1800, steps=50; let s=0;
+    const t = setInterval(() => {
+      s++; const p=s/steps; const e=1-Math.pow(1-p,3); const v=e*target;
+      el.textContent = prefix+(Number.isInteger(target)?Math.round(v):v.toFixed(1))+suffix;
+      if(s>=steps){el.textContent=prefix+target+suffix;clearInterval(t);}
+    }, dur/steps);
+  }
+  const cObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){runCounter(e.target);cObs.unobserve(e.target);} });
+  }, {threshold:.5});
+  document.querySelectorAll('.counter[data-target]').forEach(el => cObs.observe(el));
+
+  // Spotlight effect
+  const heroSec = document.getElementById('overview');
+  const spotEl = document.getElementById('hero-spotlight');
+  if (heroSec && spotEl) {
+    heroSec.addEventListener('mousemove', e => {
+      spotEl.style.background = `radial-gradient(700px circle at ${e.clientX}px ${e.clientY}px, rgba(37,99,235,.065) 0%, transparent 80%)`;
+    });
+    heroSec.addEventListener('mouseleave', () => { spotEl.style.background = ''; });
+  }
+</script>
+</body>
+</html>

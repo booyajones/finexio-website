@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LedgerHealth — The Financial Ledger for Healthcare</title>
+  <meta name="description" content="LedgerHealth is the distributed financial reconciliation ledger that healthcare has never had — creating an immutable source of truth for every claim, payment, denial, and appeal in the $935B waste problem.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          ink:{50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a',950:'#020617'},
+          gold:{50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e'}
+        },
+        fontFamily:{serif:['"DM Serif Display"','Georgia','serif'],sans:['"DM Sans"','system-ui','sans-serif'],mono:['"JetBrains Mono"','monospace']}
+      }}
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#FAFAFA;color:#0F172A;-webkit-font-smoothing:antialiased;margin:0}
+    .dot-bg{background-image:radial-gradient(circle,#CBD5E1 1.5px,transparent 1.5px);background-size:28px 28px}
+    .grid-bg{background-image:linear-gradient(to right,#E2E8F0 1px,transparent 1px),linear-gradient(to bottom,#E2E8F0 1px,transparent 1px);background-size:56px 56px}
+    .orb-violet{background:radial-gradient(circle,rgba(124,58,237,.13) 0%,transparent 70%);animation:orbDrift 10s ease-in-out infinite}
+    .orb-purple{background:radial-gradient(circle,rgba(168,85,247,.09) 0%,transparent 70%);animation:orbDrift 13s ease-in-out infinite reverse}
+    @keyframes orbDrift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(22px,-16px) scale(1.05)}66%{transform:translate(-16px,20px) scale(.97)}}
+    @keyframes auroraShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .aurora-bg{background:linear-gradient(135deg,#ffffff 0%,#f5f3ff 30%,#ede9fe 60%,#e9d5ff 100%);background-size:400% 400%;animation:auroraShift 14s ease infinite}
+    .spotlight{position:absolute;inset:0;pointer-events:none;z-index:1;transition:background .15s ease}
+    @keyframes particleDrift{0%,100%{transform:translateY(0) translateX(0);opacity:.55}40%{transform:translateY(-28px) translateX(10px);opacity:.25}75%{transform:translateY(-14px) translateX(-8px);opacity:.45}}
+    .particle{position:absolute;pointer-events:none;border-radius:50%;will-change:transform}
+    @keyframes shimmerBtn{0%{left:-100%}50%{left:160%}100%{left:160%}}
+    @keyframes shimmerText{to{background-position:-200% center}}
+    .shimmer-violet{background:linear-gradient(90deg,#5b21b6 0%,#7c3aed 40%,#c084fc 60%,#5b21b6 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerText 3.5s linear infinite}
+    @keyframes ledgerAppend{0%{opacity:0;transform:translateX(-20px)}100%{opacity:1;transform:translateX(0)}}
+    .ledger-row{animation:ledgerAppend .4s ease forwards}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
+    .nav-glass{background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(226,232,240,.9)}
+    .btn-dark{background:#0F172A;color:#fff;padding:12px 28px;border-radius:10px;font-weight:600;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;position:relative;overflow:hidden}
+    .btn-dark::after{content:'';position:absolute;top:0;left:-100%;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);animation:shimmerBtn 3.5s ease-in-out infinite}
+    .btn-dark:hover{background:#1e293b;transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,23,42,.28)}
+    .btn-violet{background:linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,.28)}
+    .btn-violet:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,.4)}
+    .btn-outline{background:transparent;color:#0F172A;border:1.5px solid #CBD5E1;padding:13px 28px;border-radius:10px;font-weight:600;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer}
+    .btn-outline:hover{border-color:#0F172A;background:#0F172A;color:#fff}
+    .card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.08)}
+    .glow-card{box-shadow:0 0 40px rgba(124,58,237,.1),0 8px 32px rgba(0,0,0,.06);border:1px solid rgba(124,58,237,.15);background:#fff;border-radius:20px;overflow:hidden;transition:all .3s ease}
+    .glow-card:hover{box-shadow:0 0 60px rgba(124,58,237,.18),0 12px 40px rgba(0,0,0,.1);transform:translateY(-4px)}
+    .tag{display:inline-flex;align-items:center;border-radius:999px;font-size:11px;font-weight:600;padding:3px 12px;letter-spacing:.04em;text-transform:uppercase}
+    .tn{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
+    .te{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
+    .ts{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0}
+    .tg{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+    .tv{background:#F5F3FF;color:#5B21B6;border:1px solid #DDD6FE}
+    .slabel{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7C3AED}
+    .process-step{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .process-step:hover{border-color:#c4b5fd;box-shadow:0 8px 24px rgba(124,58,237,.08)}
+    .ledger-card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px;font-family:'JetBrains Mono',monospace;font-size:12px;overflow:hidden}
+    .ledger-entry{padding:8px 12px;border-radius:8px;margin-bottom:6px;display:flex;align-items:center;gap:12px}
+    .ledger-approved{background:rgba(5,150,105,.15);border:1px solid rgba(5,150,105,.3)}
+    .ledger-denied{background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.3)}
+    .ledger-payment{background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3)}
+    #mobile-menu{display:none}#mobile-menu.open{display:flex}
+    @media(max-width:768px){.hero-h1{font-size:clamp(2.8rem,12vw,5rem) !important}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="fixed w-full z-50 nav-glass" role="navigation" aria-label="Site navigation">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="../" class="font-serif text-2xl font-bold text-ink-900" aria-label="Back to The Architecture">CW.</a>
+    <a href="../" class="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink-600 hover:text-ink-900 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Back to Portfolio
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-ink-600">
+      <a href="#overview" class="hover:text-ink-900 transition-colors">Overview</a>
+      <a href="#inevitable" class="hover:text-ink-900 transition-colors">Why Inevitable</a>
+      <a href="#moat" class="hover:text-ink-900 transition-colors">The Moat</a>
+      <a href="#solution" class="hover:text-ink-900 transition-colors">Solution</a>
+      <a href="#market" class="hover:text-ink-900 transition-colors">Market</a>
+    </div>
+    <a href="mailto:contact@venture.dev" class="btn-dark py-2.5 px-5 text-sm hidden md:inline-flex">Contact Us</a>
+    <button id="hamburger" class="md:hidden p-2 rounded-lg hover:bg-ink-100 transition-colors cursor-pointer" aria-label="Open menu">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="flex-col px-6 pb-5 gap-1 border-t border-ink-100">
+    <a href="../" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">&larr; Back to Portfolio</a>
+    <a href="#inevitable" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">Why Inevitable</a>
+    <a href="#moat" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">The Moat</a>
+    <a href="#solution" class="py-3 text-sm font-medium text-ink-700 block">Solution</a>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<section id="overview" class="relative min-h-screen flex items-center pt-20 overflow-hidden" aria-label="LedgerHealth overview">
+  <div class="absolute inset-0 dot-bg opacity-60" aria-hidden="true"></div>
+  <div class="absolute inset-0 aurora-bg opacity-80" aria-hidden="true"></div>
+  <div class="absolute top-16 right-10 w-[500px] h-[500px] orb-violet pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute bottom-20 left-8 w-[380px] h-[380px] orb-purple pointer-events-none" aria-hidden="true"></div>
+  <div class="spotlight" id="hero-spotlight" aria-hidden="true"></div>
+  <div class="particle w-2 h-2 bg-violet-400/35" style="top:20%;left:8%;animation:particleDrift 7s ease-in-out infinite" aria-hidden="true"></div>
+  <div class="particle w-1.5 h-1.5 bg-purple-400/30" style="top:65%;left:12%;animation:particleDrift 9.5s ease-in-out infinite 1.5s" aria-hidden="true"></div>
+  <div class="particle w-1 h-1 bg-violet-500/45" style="top:32%;right:16%;animation:particleDrift 6.5s ease-in-out infinite 0.7s" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 w-full py-24">
+    <div class="grid lg:grid-cols-12 gap-16 items-center">
+      <div class="lg:col-span-7 space-y-8">
+        <div class="reveal d1 flex items-center gap-3">
+          <a href="../" class="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-800 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            The Architecture
+          </a>
+          <span class="text-ink-300" aria-hidden="true">/</span>
+          <span class="slabel">Concepts</span>
+        </div>
+
+        <div class="reveal d2 flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <span class="tag tv">Financial Infrastructure &middot; Reconciliation AI</span>
+        </div>
+
+        <div class="reveal d3">
+          <h1 class="font-serif leading-tight shimmer-violet" style="font-size:clamp(3rem,8vw,6.5rem);letter-spacing:-.02em">
+            Ledger<br>Health
+          </h1>
+          <p class="font-serif text-2xl text-violet-700 italic mt-2">The Financial Ledger Healthcare Was Never Built</p>
+        </div>
+
+        <p class="reveal d4 text-lg text-ink-600 leading-relaxed max-w-xl">
+          Healthcare loses <strong class="text-ink-900">$935 billion annually</strong> to billing errors, fraud, and disputes. Every claim, payment, denial, and appeal exists in a different system — payer, provider, clearinghouse, and government each have their own version of the truth. LedgerHealth creates the single, immutable financial record that healthcare has never had.
+        </p>
+
+        <div class="reveal d5 flex flex-wrap items-center gap-4">
+          <a href="#inevitable" class="btn-violet">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            Why It's Inevitable
+          </a>
+          <a href="#moat" class="btn-outline">The Moat</a>
+        </div>
+      </div>
+
+      <!-- Stats cluster -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="reveal d3 glow-card">
+          <div class="h-1.5 bg-gradient-to-r from-violet-500 to-purple-400"></div>
+          <div class="p-8 grid grid-cols-2 gap-6">
+            <div>
+              <div class="font-serif text-4xl text-ink-900">$935B</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Annual Healthcare Waste</div>
+            </div>
+            <div>
+              <div class="font-serif text-4xl text-violet-600">0</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Unified Source of Truth</div>
+            </div>
+            <div class="col-span-2 pt-4 border-t border-ink-100">
+              <div class="font-serif text-3xl text-emerald-700">7 Years</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">CMS Mandated Retention</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 reveal d4">
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-violet-600">FHIR</div>
+            <div class="text-xs text-ink-400 mt-0.5">Native API</div>
+          </div>
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-ink-900">90d</div>
+            <div class="text-xs text-ink-400 mt-0.5">Recon Cycle</div>
+          </div>
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-ink-900">$0</div>
+            <div class="text-xs text-ink-400 mt-0.5">Existing Fix</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WHY IT IS INEVITABLE -->
+<section id="inevitable" class="py-28 bg-white" aria-labelledby="h-inevitable">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      <div class="reveal">
+        <div class="slabel mb-3">Structural Inevitability</div>
+        <h2 id="h-inevitable" class="font-serif text-5xl text-ink-900 leading-tight mb-6">Why It Is<br><em class="text-violet-600">Inevitable</em></h2>
+        <p class="text-ink-600 leading-relaxed mb-6">Healthcare financial reconciliation is the most broken accounting system in the US economy. When a provider submits a claim, it enters a maze of systems — clearinghouse, payer adjudication, appeals engine, payment processor, banking system, provider billing system, and government registry — none of which speak to each other.</p>
+        <p class="text-ink-600 leading-relaxed mb-8">The Change Healthcare breach made this problem existential. Transaction records were lost. Providers couldn't reconcile what had been received, what was pending, and what had been voided. Months later, hospitals were still finding billing discrepancies. CMS auditors couldn't reconcile Medicare payments. The absence of a shared ledger wasn't just inefficient — it was catastrophic.</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">$935B in annual healthcare waste — billing errors, fraud, and administrative redundancy</div>
+              <div class="text-xs text-ink-500 mt-0.5">JAMA 2020 — More than the annual GDP of Switzerland, largely addressable with a unified financial record</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">Average reconciliation cycle: 90–120 days between claim submission and final settlement</div>
+              <div class="text-xs text-ink-500 mt-0.5">HFMA Revenue Cycle Survey 2024 — Cash locked in AR is working capital that providers desperately need</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">CMS requires 7-year retention of all Medicare/Medicaid claim records — no good infrastructure exists</div>
+              <div class="text-xs text-ink-500 mt-0.5">42 CFR Part 422/423 — Records stored in silos across dozens of systems with no unified access</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">Change Healthcare breach: transaction records lost for weeks — providers couldn't audit their own revenue</div>
+              <div class="text-xs text-ink-500 mt-0.5">AHA Post-Breach Report, June 2024 — The financial black hole exposed by losing the clearinghouse as a record keeper</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The problem visualization -->
+      <div class="reveal d2 space-y-4">
+        <!-- Current state: fragmented -->
+        <div class="p-6 rounded-2xl bg-red-50 border border-red-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-red-600 mb-4">Current State: 7 Systems, 7 Versions of Truth</div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-3 bg-white rounded-xl border border-red-100 text-center">
+              <div class="text-xs font-bold text-ink-800">Provider EHR</div>
+              <div class="text-xs text-ink-400 mt-1">Claim: $1,200</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-red-100 text-center">
+              <div class="text-xs font-bold text-ink-800">Clearinghouse</div>
+              <div class="text-xs text-ink-400 mt-1">Status: "Forwarded"</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-red-100 text-center">
+              <div class="text-xs font-bold text-ink-800">Payer System</div>
+              <div class="text-xs text-ink-400 mt-1">Adjudicated: $980</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-red-100 text-center">
+              <div class="text-xs font-bold text-ink-800">Appeals Engine</div>
+              <div class="text-xs text-ink-400 mt-1">Pending review</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-red-100 text-center">
+              <div class="text-xs font-bold text-ink-800">Provider Bank</div>
+              <div class="text-xs text-ink-400 mt-1">Received: $940</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-red-100 text-center">
+              <div class="text-xs font-bold text-ink-800">CMS Registry</div>
+              <div class="text-xs text-ink-400 mt-1">Final: ???</div>
+            </div>
+          </div>
+          <div class="mt-3 text-center text-xs text-red-700 font-bold">Which number is right? Nobody knows. $260 disappeared somewhere.</div>
+        </div>
+
+        <!-- LedgerHealth state -->
+        <div class="p-6 rounded-2xl bg-violet-50 border border-violet-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-violet-600 mb-4">With LedgerHealth: One Immutable Record</div>
+          <div class="ledger-card">
+            <div class="text-xs text-violet-400 mb-3">// LedgerHealth — Claim #837-2024-0923-8812</div>
+            <div class="space-y-2">
+              <div class="ledger-entry ledger-approved">
+                <span class="text-emerald-400 flex-shrink-0">✓</span>
+                <div class="flex-1"><span class="text-emerald-300">SUBMITTED</span> <span class="text-ink-400 text-xs">09:14:23 UTC</span></div>
+                <span class="text-white font-mono">$1,200.00</span>
+              </div>
+              <div class="ledger-entry ledger-denied">
+                <span class="text-rose-400 flex-shrink-0">!</span>
+                <div class="flex-1"><span class="text-rose-300">ADJUDICATED</span> <span class="text-ink-400 text-xs">09:16:01 UTC</span></div>
+                <span class="text-white font-mono">$980.00</span>
+              </div>
+              <div class="ledger-entry ledger-payment">
+                <span class="text-violet-400 flex-shrink-0">$</span>
+                <div class="flex-1"><span class="text-violet-300">PAYMENT SENT</span> <span class="text-ink-400 text-xs">09:18:44 UTC</span></div>
+                <span class="text-white font-mono">$980.00</span>
+              </div>
+              <div class="ledger-entry" style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2)">
+                <span class="text-violet-400 flex-shrink-0">⚡</span>
+                <div class="flex-1"><span class="text-violet-300">HASH VERIFIED</span> <span class="text-ink-400 text-xs">09:18:45 UTC</span></div>
+                <span class="text-green-400 text-xs font-mono">IMMUTABLE</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 text-center text-xs text-violet-700 font-bold">Every party sees the same record. The $220 discrepancy is immediately flagged for appeal.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WHY CHRIS WINS -->
+<section id="moat" class="py-28 bg-ink-50" aria-labelledby="h-moat">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">The Moat</div>
+      <h2 id="h-moat" class="font-serif text-5xl text-ink-900 leading-tight mb-4">The Strategic Moat</h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-violet-600 to-purple-400 rounded-full"></div>
+      <p class="text-ink-500 mt-5 max-w-2xl text-lg leading-relaxed">A financial ledger for healthcare requires the rare combination of payment reconciliation engineering, healthcare data infrastructure expertise, and enterprise financial operations experience. This is exactly what The Architecture has built — across multiple companies, at scale.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="card p-6 reveal d1 border-l-4 border-violet-500">
+        <div class="font-mono text-xs text-violet-600 mb-3 uppercase tracking-wider">Reconciliation DNA</div>
+        <h3 class="font-semibold text-ink-900 mb-2">Built $11B Payment Reconciliation</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Finexio's core product is payment reconciliation — matching AP invoices to virtual card payments to supplier confirmations to bank settlements. At $11B annually, this is exactly the schema LedgerHealth applies to claims data.</p>
+      </div>
+
+      <div class="card p-6 reveal d2 border-l-4 border-violet-500">
+        <div class="font-mono text-xs text-violet-600 mb-3 uppercase tracking-wider">Healthcare Data</div>
+        <h3 class="font-semibold text-ink-900 mb-2">SIC Classification at Scale = ICD-10 Equivalent</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Running AI batch classification across millions of unstructured records to produce deterministic, compliant output codes — this is the exact problem LedgerHealth solves for ICD-10/CPT code normalization across disparate billing systems.</p>
+      </div>
+
+      <div class="card p-6 reveal d3 border-l-4 border-purple-500">
+        <div class="font-mono text-xs text-purple-600 mb-3 uppercase tracking-wider">Structural Insight</div>
+        <h3 class="font-semibold text-ink-900 mb-2">Saw the Reconciliation Gap From Both Sides</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">At Parasail Health (provider side), The Architecture lived the 90-day reconciliation nightmare firsthand. At Finexio (payments side), he built the system that eliminates it for B2B payments. The bridge between these two experiences IS LedgerHealth.</p>
+      </div>
+
+      <div class="card p-6 reveal d4 border-l-4 border-purple-500">
+        <div class="font-mono text-xs text-purple-600 mb-3 uppercase tracking-wider">P&amp;L Owner</div>
+        <h3 class="font-semibold text-ink-900 mb-2">Knows What $935B in Waste Looks Like on a Budget</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Managing $300M+ P&amp;L means every billing error, every disputed claim, and every unreconciled payment shows up on your financial statements. The pain of bad reconciliation infrastructure is visceral — and so is the business case for fixing it.</p>
+      </div>
+
+      <div class="card p-6 reveal d5 border-l-4 border-violet-500 md:col-span-2">
+        <div class="font-mono text-xs text-violet-600 mb-3 uppercase tracking-wider">Technical Foundation</div>
+        <h3 class="font-semibold text-ink-900 mb-2">The Infrastructure Layer Already Exists</h3>
+        <p class="text-sm text-ink-500 leading-relaxed mb-4">LedgerHealth doesn't require new blockchain or exotic distributed computing. It requires: a FHIR-compliant data schema, AI normalization of incoming records, cryptographic hashing for immutability, and a multi-party API that payers, providers, and clearinghouses can write to. The Architecture has built every one of these components — separately, at scale — across Finexio, Parasail, and prompt-master.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag tn">Payment Rails</span>
+          <span class="tag te">Healthcare RCM</span>
+          <span class="tag tv">AI Classification</span>
+          <span class="tag ts">Compliance Infra</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- THE SOLUTION -->
+<section id="solution" class="py-28 bg-white" aria-labelledby="h-solution">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">Product Architecture</div>
+      <h2 id="h-solution" class="font-serif text-5xl text-ink-900 leading-tight mb-4">One Record.<br><em class="text-violet-600">Cryptographically Verified.</em></h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-violet-600 to-purple-400 rounded-full"></div>
+      <p class="text-ink-500 mt-5 max-w-2xl text-lg leading-relaxed">LedgerHealth is not blockchain — it's a FHIR-native distributed ledger with cryptographic verification, AI normalization, and multi-party write access. Every claim event writes to LedgerHealth, creating a shared, immutable financial truth for all parties.</p>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-4 mb-16">
+      <div class="process-step p-6 reveal d1">
+        <div class="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center mb-4"><span class="font-mono text-sm font-bold text-violet-700">01</span></div>
+        <h3 class="font-semibold text-ink-900 mb-2">Multi-Source Ingestion</h3>
+        <p class="text-sm text-ink-500">Accepts writes from any party: provider EMR, payer system, clearinghouse, payment processor, appeals engine. Each source writes its event; AI normalizes and deduplicates into the canonical record.</p>
+      </div>
+      <div class="process-step p-6 reveal d2">
+        <div class="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center mb-4"><span class="font-mono text-sm font-bold text-violet-700">02</span></div>
+        <h3 class="font-semibold text-ink-900 mb-2">AI Normalization</h3>
+        <p class="text-sm text-ink-500">LLM normalizes incoming data: resolves ICD-10 coding variations, matches NPI identifiers across systems, reconciles payment amounts, and flags discrepancies for review — all within 500ms of ingestion.</p>
+      </div>
+      <div class="process-step p-6 reveal d3">
+        <div class="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center mb-4"><span class="font-mono text-sm font-bold text-violet-700">03</span></div>
+        <h3 class="font-semibold text-ink-900 mb-2">Cryptographic Commit</h3>
+        <p class="text-sm text-ink-500">Each record is SHA-256 hashed and appended to the ledger with a timestamp. Any subsequent modification creates a new record referencing the previous hash — full chain of custody, mathematically verifiable by any party.</p>
+      </div>
+      <div class="process-step p-6 reveal d4">
+        <div class="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center mb-4"><span class="font-mono text-sm font-bold text-violet-700">04</span></div>
+        <h3 class="font-semibold text-ink-900 mb-2">Real-Time Reconciliation</h3>
+        <p class="text-sm text-ink-500">AI continuously reconciles expected vs. received payments. Flags discrepancies instantly. Auto-generates appeal documents for underpayments. Reduces 90-day reconciliation cycles to 24 hours.</p>
+      </div>
+    </div>
+
+    <!-- Use cases bento -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card p-6 reveal d1">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-violet-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Revenue Cycle Analytics</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Real-time AR dashboard showing every claim status, payment received vs. expected, denial patterns by payer and code. CFO-grade financial reporting that previously required weeks of manual analysis.</p>
+      </div>
+      <div class="card p-6 reveal d2">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-violet-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">CMS Compliance Records</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">7-year immutable record retention for Medicare/Medicaid compliance. Every audit query answers in seconds from the ledger. OIG audits that previously took months complete in hours.</p>
+      </div>
+      <div class="card p-6 reveal d3">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-violet-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Payer-Provider Reconciliation</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Eliminates the monthly "he said, she said" between payer and provider over contract rates. Shared ledger shows both parties the same adjudication history, reducing dispute cycles from months to hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- MARKET -->
+<section id="market" class="py-28 bg-ink-50" aria-labelledby="h-market">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-12 reveal">
+      <div class="slabel mb-3">Market Opportunity</div>
+      <h2 id="h-market" class="font-serif text-5xl text-ink-900 leading-tight mb-4">$935B Problem.<br><em class="text-violet-600">Zero Existing Solutions.</em></h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-violet-600 to-purple-400 rounded-full"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="glow-card p-6 reveal d1">
+        <div class="font-serif text-4xl text-violet-600 mb-2">$935B</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Annual Waste Addressable</div>
+        <div class="text-xs text-ink-500">Directly enabled by reconciliation failures — billing errors, fraud, duplicate payments, disputes</div>
+      </div>
+      <div class="glow-card p-6 reveal d2">
+        <div class="font-serif text-4xl text-emerald-600 mb-2">$18B</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Healthcare Analytics Market</div>
+        <div class="text-xs text-ink-500">LedgerHealth competes here — but with a structural data advantage no analytics vendor can match</div>
+      </div>
+      <div class="glow-card p-6 reveal d3">
+        <div class="font-serif text-4xl text-blue-600 mb-2">90d</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Current Recon Cycle</div>
+        <div class="text-xs text-ink-500">Cash locked in 90-day AR cycles × US healthcare = $100B+ in working capital freed annually by faster reconciliation</div>
+      </div>
+      <div class="glow-card p-6 reveal d4">
+        <div class="font-serif text-4xl text-rose-600 mb-2">$SaaS</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Revenue Model</div>
+        <div class="text-xs text-ink-500">Per-transaction ledger fee ($0.01–0.03) + SaaS analytics subscription + compliance reporting module</div>
+      </div>
+    </div>
+
+    <div class="card p-8 reveal">
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div>
+          <div class="slabel mb-2">Distribution Strategy</div>
+          <h3 class="font-serif text-2xl text-ink-900 mb-3">Clearinghouse as Distribution Partner</h3>
+          <p class="text-sm text-ink-500 leading-relaxed">Every claim passes through a clearinghouse. LedgerHealth integrates with clearinghouses as a ledger layer — adding reconciliation and auditability to existing transaction flows without requiring providers or payers to change their workflows. The clearinghouse becomes the distribution channel. Post-Change Healthcare, clearinghouses WANT to offer trust-enhancing features.</p>
+        </div>
+        <div>
+          <div class="slabel mb-2">Regulatory Wedge</div>
+          <h3 class="font-serif text-2xl text-ink-900 mb-3">CMS Audit Requirements = Forced Adoption</h3>
+          <p class="text-sm text-ink-500 leading-relaxed">CMS is expanding RAC (Recovery Audit Contractor) programs and requiring better documentation for Medicare/Medicaid payments. Health systems facing RAC audits immediately need LedgerHealth's 7-year immutable records. The regulatory burden creates a direct commercial entry point that doesn't require a complex sales motion — the CFO is already motivated.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="py-20 bg-ink-900 relative overflow-hidden" aria-label="Contact">
+  <div class="absolute inset-0 grid-bg opacity-10" aria-hidden="true"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+    <div class="reveal">
+      <div class="slabel mb-4" style="color:#c084fc">Concept Discussion</div>
+      <h2 class="font-serif text-5xl text-white mb-6">The Ledger Healthcare Never Had</h2>
+      <p class="text-ink-400 text-lg mb-8 max-w-2xl mx-auto">Health system CFOs, payer finance teams, RCM vendors, and investors — $935B in addressable waste, zero existing solutions, regulatory tailwinds. The builder has the reconciliation engineering background to make this real.</p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="mailto:contact@venture.dev" class="btn-violet">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Request Deck
+        </a>
+        <a href="../" class="btn-outline" style="color:#fff;border-color:#475569">View Full Portfolio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-ink-950 py-8" role="contentinfo">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <a href="../" class="font-serif text-2xl font-bold text-white">CW.</a>
+    <p class="text-xs text-ink-500">&copy; 2026 Venture Studio &middot; Concept Blueprint &middot; All rights reserved</p>
+    <a href="../" class="text-xs text-ink-500 hover:text-white transition-colors">Back to Portfolio</a>
+  </div>
+</footer>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  if(ham && menu) ham.addEventListener('click', () => menu.classList.toggle('open'));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  const spotlight = document.getElementById('hero-spotlight');
+  if(spotlight) {
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      spotlight.style.background = `radial-gradient(800px circle at ${x}% ${y}%, rgba(124,58,237,.06), transparent 60%)`;
+    });
+  }
+</script>
+</body>
+</html>

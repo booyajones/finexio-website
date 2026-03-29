@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClearingAI — The AI-Native Claims Clearinghouse</title>
+  <meta name="description" content="ClearingAI replaces legacy EDI clearinghouses like Change Healthcare with distributed, AI-native infrastructure — no single point of failure, no $2.9B breach exposure.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          ink:{50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a',950:'#020617'},
+          gold:{50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e'}
+        },
+        fontFamily:{serif:['"DM Serif Display"','Georgia','serif'],sans:['"DM Sans"','system-ui','sans-serif'],mono:['"JetBrains Mono"','monospace']}
+      }}
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#FAFAFA;color:#0F172A;-webkit-font-smoothing:antialiased;margin:0}
+    .dot-bg{background-image:radial-gradient(circle,#CBD5E1 1.5px,transparent 1.5px);background-size:28px 28px}
+    .grid-bg{background-image:linear-gradient(to right,#E2E8F0 1px,transparent 1px),linear-gradient(to bottom,#E2E8F0 1px,transparent 1px);background-size:56px 56px}
+    .orb-indigo{background:radial-gradient(circle,rgba(79,70,229,.13) 0%,transparent 70%);animation:orbDrift 10s ease-in-out infinite}
+    .orb-violet{background:radial-gradient(circle,rgba(139,92,246,.09) 0%,transparent 70%);animation:orbDrift 13s ease-in-out infinite reverse}
+    @keyframes orbDrift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(22px,-16px) scale(1.05)}66%{transform:translate(-16px,20px) scale(.97)}}
+    @keyframes auroraShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .aurora-bg{background:linear-gradient(135deg,#ffffff 0%,#eef2ff 30%,#f5f3ff 60%,#ede9fe 100%);background-size:400% 400%;animation:auroraShift 14s ease infinite}
+    .spotlight{position:absolute;inset:0;pointer-events:none;z-index:1;transition:background .15s ease}
+    @keyframes particleDrift{0%,100%{transform:translateY(0) translateX(0);opacity:.55}40%{transform:translateY(-28px) translateX(10px);opacity:.25}75%{transform:translateY(-14px) translateX(-8px);opacity:.45}}
+    .particle{position:absolute;pointer-events:none;border-radius:50%;will-change:transform}
+    @keyframes shimmerBtn{0%{left:-100%}50%{left:160%}100%{left:160%}}
+    @keyframes shimmerText{to{background-position:-200% center}}
+    .shimmer-indigo{background:linear-gradient(90deg,#3730a3 0%,#4f46e5 40%,#818cf8 60%,#3730a3 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerText 3.5s linear infinite}
+    @keyframes pulseRing{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.8);opacity:0}}
+    .pulse-ring{position:absolute;border-radius:50%;border:2px solid rgba(79,70,229,.4);animation:pulseRing 2s ease-out infinite}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
+    .nav-glass{background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(226,232,240,.9)}
+    .btn-dark{background:#0F172A;color:#fff;padding:12px 28px;border-radius:10px;font-weight:600;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;position:relative;overflow:hidden}
+    .btn-dark::after{content:'';position:absolute;top:0;left:-100%;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);animation:shimmerBtn 3.5s ease-in-out infinite}
+    .btn-dark:hover{background:#1e293b;transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,23,42,.28)}
+    .btn-indigo{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;box-shadow:0 4px 16px rgba(79,70,229,.28)}
+    .btn-indigo:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(79,70,229,.4)}
+    .btn-outline{background:transparent;color:#0F172A;border:1.5px solid #CBD5E1;padding:13px 28px;border-radius:10px;font-weight:600;font-size:14px;transition:all .25s ease;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer}
+    .btn-outline:hover{border-color:#0F172A;background:#0F172A;color:#fff}
+    .card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.08)}
+    .stat-card{background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden;transition:all .3s ease}
+    .stat-card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.09)}
+    .glow-card{box-shadow:0 0 40px rgba(79,70,229,.1),0 8px 32px rgba(0,0,0,.06);border:1px solid rgba(79,70,229,.15);background:#fff;border-radius:20px;overflow:hidden;transition:all .3s ease}
+    .glow-card:hover{box-shadow:0 0 60px rgba(79,70,229,.18),0 12px 40px rgba(0,0,0,.1);transform:translateY(-4px)}
+    .tag{display:inline-flex;align-items:center;border-radius:999px;font-size:11px;font-weight:600;padding:3px 12px;letter-spacing:.04em;text-transform:uppercase}
+    .tn{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
+    .te{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
+    .ts{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0}
+    .tg{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+    .ti{background:#EEF2FF;color:#3730A3;border:1px solid #C7D2FE}
+    .slabel{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#4F46E5}
+    .process-step{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .process-step:hover{border-color:#a5b4fc;box-shadow:0 8px 24px rgba(79,70,229,.08)}
+    .node-card{background:#fff;border:1px solid #c7d2fe;border-radius:12px;padding:16px;text-align:center;transition:all .3s ease}
+    .node-card:hover{border-color:#818cf8;box-shadow:0 4px 20px rgba(79,70,229,.12);transform:translateY(-2px)}
+    #mobile-menu{display:none}#mobile-menu.open{display:flex}
+    @media(max-width:768px){.hero-h1{font-size:clamp(2.8rem,12vw,5rem) !important}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="fixed w-full z-50 nav-glass" role="navigation" aria-label="Site navigation">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="../" class="font-serif text-2xl font-bold text-ink-900" aria-label="Back to The Architecture">CW.</a>
+    <a href="../" class="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink-600 hover:text-ink-900 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Back to Portfolio
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-ink-600">
+      <a href="#overview" class="hover:text-ink-900 transition-colors">Overview</a>
+      <a href="#inevitable" class="hover:text-ink-900 transition-colors">Why Inevitable</a>
+      <a href="#moat" class="hover:text-ink-900 transition-colors">The Moat</a>
+      <a href="#solution" class="hover:text-ink-900 transition-colors">Solution</a>
+      <a href="#market" class="hover:text-ink-900 transition-colors">Market</a>
+    </div>
+    <a href="mailto:contact@venture.dev" class="btn-dark py-2.5 px-5 text-sm hidden md:inline-flex">Contact Us</a>
+    <button id="hamburger" class="md:hidden p-2 rounded-lg hover:bg-ink-100 transition-colors cursor-pointer" aria-label="Open menu">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="flex-col px-6 pb-5 gap-1 border-t border-ink-100">
+    <a href="../" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">&larr; Back to Portfolio</a>
+    <a href="#inevitable" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">Why Inevitable</a>
+    <a href="#moat" class="py-3 text-sm font-medium text-ink-700 border-b border-ink-100 block">The Moat</a>
+    <a href="#solution" class="py-3 text-sm font-medium text-ink-700 block">Solution</a>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<section id="overview" class="relative min-h-screen flex items-center pt-20 overflow-hidden" aria-label="ClearingAI overview">
+  <div class="absolute inset-0 dot-bg opacity-60" aria-hidden="true"></div>
+  <div class="absolute inset-0 aurora-bg opacity-80" aria-hidden="true"></div>
+  <div class="absolute top-16 right-10 w-[500px] h-[500px] orb-indigo pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute bottom-20 left-8 w-[380px] h-[380px] orb-violet pointer-events-none" aria-hidden="true"></div>
+  <div class="spotlight" id="hero-spotlight" aria-hidden="true"></div>
+  <div class="particle w-2 h-2 bg-indigo-400/35" style="top:20%;left:8%;animation:particleDrift 7s ease-in-out infinite" aria-hidden="true"></div>
+  <div class="particle w-1.5 h-1.5 bg-violet-400/30" style="top:65%;left:12%;animation:particleDrift 9.5s ease-in-out infinite 1.5s" aria-hidden="true"></div>
+  <div class="particle w-1 h-1 bg-indigo-500/45" style="top:32%;right:16%;animation:particleDrift 6.5s ease-in-out infinite 0.7s" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 w-full py-24">
+    <div class="grid lg:grid-cols-12 gap-16 items-center">
+      <div class="lg:col-span-7 space-y-8">
+        <div class="reveal d1 flex items-center gap-3">
+          <a href="../" class="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-800 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            The Architecture
+          </a>
+          <span class="text-ink-300" aria-hidden="true">/</span>
+          <span class="slabel">Concepts</span>
+        </div>
+
+        <div class="reveal d2 flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+          </div>
+          <span class="tag ti">EDI Infrastructure &middot; Post-Change Healthcare</span>
+        </div>
+
+        <div class="reveal d3">
+          <h1 class="font-serif leading-tight shimmer-indigo" style="font-size:clamp(3rem,8vw,6.5rem);letter-spacing:-.02em">
+            ClearingAI
+          </h1>
+          <p class="font-serif text-2xl text-indigo-600 italic mt-2">The AI-Native Claims Clearinghouse</p>
+        </div>
+
+        <p class="reveal d4 text-lg text-ink-600 leading-relaxed max-w-xl">
+          Change Healthcare processes <strong class="text-ink-900">15 billion transactions annually</strong> through a single centralized architecture. On February 21, 2024, that architecture failed — costing <strong class="text-ink-900">$2.9 billion</strong> in remediation and freezing <strong class="text-ink-900">$14B+ in provider payments</strong>. ClearingAI replaces it with distributed, AI-native EDI infrastructure.
+        </p>
+
+        <div class="reveal d5 flex flex-wrap items-center gap-4">
+          <a href="#inevitable" class="btn-indigo">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            Why It's Inevitable
+          </a>
+          <a href="#moat" class="btn-outline">The Moat</a>
+        </div>
+      </div>
+
+      <!-- Stats cluster -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="reveal d3 glow-card">
+          <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-violet-400"></div>
+          <div class="p-8 grid grid-cols-2 gap-6">
+            <div>
+              <div class="font-serif text-4xl text-ink-900">15B</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Transactions / Year at Risk</div>
+            </div>
+            <div>
+              <div class="font-serif text-4xl text-red-600">$2.9B</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">CHC Breach Total Cost</div>
+            </div>
+            <div class="col-span-2 pt-4 border-t border-ink-100">
+              <div class="font-serif text-3xl text-indigo-600">99.99%</div>
+              <div class="text-xs text-ink-500 mt-1 uppercase tracking-wider">Uptime Target (Distributed)</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 reveal d4">
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-red-600">Feb&nbsp;2024</div>
+            <div class="text-xs text-ink-400 mt-0.5">Attack Date</div>
+          </div>
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-indigo-600">AI</div>
+            <div class="text-xs text-ink-400 mt-0.5">Fraud Detection</div>
+          </div>
+          <div class="card p-4 text-center">
+            <div class="font-serif text-xl text-ink-900">X12</div>
+            <div class="text-xs text-ink-400 mt-0.5">EDI Native</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WHY IT IS INEVITABLE -->
+<section id="inevitable" class="py-28 bg-white" aria-labelledby="h-inevitable">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      <div class="reveal">
+        <div class="slabel mb-3">Structural Inevitability</div>
+        <h2 id="h-inevitable" class="font-serif text-5xl text-ink-900 leading-tight mb-6">Why It Is<br><em class="text-indigo-600">Inevitable</em></h2>
+        <p class="text-ink-600 leading-relaxed mb-6">The ALPHV/BlackCat ransomware attack on Change Healthcare didn't just disrupt a company — it exposed that <strong class="text-ink-800">1 in 3 US patient records</strong> flow through a single COBOL-era architecture owned by a $470B insurance conglomerate. The entire US healthcare claims infrastructure had a single point of failure. And it failed.</p>
+        <p class="text-ink-600 leading-relaxed mb-8">Post-breach, CMS proposed new rules requiring payer redundancy in claims processing. Congress held hearings. Every health system CFO discovered they had no alternative clearinghouse route. The regulatory and market demand for a resilient replacement has never been higher.</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">$14B+ in provider payments frozen — hospitals ran on credit for 60–90 days</div>
+              <div class="text-xs text-ink-500 mt-0.5">American Hospital Association, March 2024 — AHCA estimated $100M/day in lost cash flow</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">UHG spent $872M on Change Healthcare remediation in Q1 2024 alone</div>
+              <div class="text-xs text-ink-500 mt-0.5">UHG Q1 2024 Earnings — Total breach cost estimated at $2.9B by year-end</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">94% of hospitals reported revenue impact; 74% had direct patient care impacts</div>
+              <div class="text-xs text-ink-500 mt-0.5">AHA Survey, April 2024 — No other industry would tolerate this level of infrastructure concentration</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+            <div class="w-5 h-5 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-red-600" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="font-semibold text-ink-800 text-sm">Legacy clearinghouses built on COBOL and mainframes from the 1990s</div>
+              <div class="text-xs text-ink-500 mt-0.5">HIPAA EDI standards (X12 837/835) adopted 2003 — underlying infrastructure predates modern security</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Architecture comparison -->
+      <div class="reveal d2 space-y-4">
+        <div class="p-6 rounded-2xl bg-red-50 border border-red-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-red-600 mb-4">Legacy Clearinghouse (Change Healthcare Model)</div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              Monolithic data center — single failure cascade
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              COBOL + VPN architecture with flat network access
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              Manual fraud review — no AI detection at ingestion
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              24–48 hour batch processing cycles
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              No real-time eligibility verification integration
+            </div>
+          </div>
+        </div>
+        <div class="p-6 rounded-2xl bg-indigo-50 border border-indigo-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-4">ClearingAI Architecture</div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Multi-region distributed nodes — N+2 redundancy standard
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Zero-trust architecture, mTLS everywhere, immutable audit logs
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              AI fraud detection on every transaction at ingestion
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Real-time EDI processing (sub-second 837/835 validation)
+            </div>
+            <div class="flex items-center gap-3 text-sm text-ink-700">
+              <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Live 270/271 eligibility integrated at claim submission
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-ink-900 text-white">
+          <div class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2">The Regulatory Tailwind</div>
+          <p class="text-sm text-ink-300 leading-relaxed">CMS NPRM (2024) proposed requiring payers to maintain <strong class="text-white">redundant clearinghouse connections</strong>. HIPAA Security Rule updates require <strong class="text-white">zero-trust architecture</strong>. ClearingAI is the only architecture that meets both requirements by design — not retrofit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WHY CHRIS WINS — THE MOAT -->
+<section id="moat" class="py-28 bg-ink-50" aria-labelledby="h-moat">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">The Moat</div>
+      <h2 id="h-moat" class="font-serif text-5xl text-ink-900 leading-tight mb-4">The Strategic Moat</h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-indigo-600 to-violet-400 rounded-full"></div>
+      <p class="text-ink-500 mt-5 max-w-2xl text-lg leading-relaxed">Building a clearinghouse requires understanding EDI transaction sets, payment clearing mechanics, healthcare compliance, and AI at the data layer. This architecture is built on a foundation of production environments scaled to billions in volume.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <div class="card p-6 reveal d1 border-l-4 border-indigo-500">
+        <div class="font-mono text-xs text-indigo-600 mb-3 uppercase tracking-wider">EDI Expertise</div>
+        <h3 class="font-semibold text-ink-900 mb-2">Built EDI Pipelines at Scale</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">X12 835/837/270/271 transaction processing — the exact EDI formats that clearinghouses route. Built in production for healthcare and fintech payment flows.</p>
+      </div>
+
+      <div class="card p-6 reveal d2 border-l-4 border-indigo-500">
+        <div class="font-mono text-xs text-indigo-600 mb-3 uppercase tracking-wider">Payment Clearing</div>
+        <h3 class="font-semibold text-ink-900 mb-2">$11B Payments Cleared Annually</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Finexio's core infrastructure IS a clearinghouse — it routes payments across rails (ACH, virtual card, check), validates transactions, and handles exceptions at $11B+ volume.</p>
+      </div>
+
+      <div class="card p-6 reveal d3 border-l-4 border-indigo-500">
+        <div class="font-mono text-xs text-indigo-600 mb-3 uppercase tracking-wider">Deterministic AI</div>
+        <h3 class="font-semibold text-ink-900 mb-2">AI That Can't Hallucinate on Claims</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">prompt-master was built to solve exactly this: AI fraud detection and claims validation requires deterministic, auditable outputs. ICD-10 codes are either right or wrong — no hallucination tolerance.</p>
+      </div>
+
+      <div class="card p-6 reveal d4 border-l-4 border-violet-500">
+        <div class="font-mono text-xs text-violet-600 mb-3 uppercase tracking-wider">Compliance DNA</div>
+        <h3 class="font-semibold text-ink-900 mb-2">HIPAA + SOC 2 + PCI Architecture</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">The system is built natively for heavy regulatory compliance frameworks. Clearinghouse compliance (HIPAA Transaction Sets, CORE Operating Rules) is table stakes, not a blocker.</p>
+      </div>
+
+      <div class="card p-6 reveal d5 border-l-4 border-violet-500 md:col-span-2">
+        <div class="font-mono text-xs text-violet-600 mb-3 uppercase tracking-wider">Change Healthcare Insight</div>
+        <h3 class="font-semibold text-ink-900 mb-2">Knows the Architecture That Failed — And Why</h3>
+        <p class="text-sm text-ink-500 leading-relaxed mb-4">A deep integration across payment infrastructure and healthcare data pipelines reveals exactly why Change Healthcare's centralized architecture was catastrophically vulnerable. The solution isn't just "distribute the database" — it's re-architecting the trust model, the failure domains, and the AI verification layer simultaneously. Most engineers see one of these problems. This concept bridges all three.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag ti">EDI / X12</span>
+          <span class="tag tn">Payment Rails</span>
+          <span class="tag te">HIPAA Compliance</span>
+          <span class="tag ts">Distributed Systems</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- THE SOLUTION -->
+<section id="solution" class="py-28 bg-white" aria-labelledby="h-solution">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">Technical Architecture</div>
+      <h2 id="h-solution" class="font-serif text-5xl text-ink-900 leading-tight mb-4">Distributed by Design.<br><em class="text-indigo-600">Intelligent by Default.</em></h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-indigo-600 to-violet-400 rounded-full"></div>
+      <p class="text-ink-500 mt-5 max-w-2xl text-lg leading-relaxed">ClearingAI is not a "better Change Healthcare." It's a fundamentally different architecture — multi-region, zero-trust, AI-first — that makes the February 2024 attack scenario structurally impossible.</p>
+    </div>
+
+    <!-- 4-step flow -->
+    <div class="grid md:grid-cols-4 gap-4 mb-16">
+      <div class="process-step p-6 reveal d1">
+        <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+          <span class="font-mono text-sm font-bold text-indigo-700">01</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Ingest &amp; Validate</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Real-time X12 EDI ingestion at sub-100ms. AI validates transaction structure, provider credentials, and payer eligibility simultaneously at submission.</p>
+      </div>
+      <div class="process-step p-6 reveal d2">
+        <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+          <span class="font-mono text-sm font-bold text-indigo-700">02</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">AI Fraud Screen</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Every claim scored against 200+ fraud signals. Pattern detection across claim bundles, provider billing history, and population-level anomaly detection. Flags before routing.</p>
+      </div>
+      <div class="process-step p-6 reveal d3">
+        <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+          <span class="font-mono text-sm font-bold text-indigo-700">03</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Intelligent Route</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Dynamic routing across 5+ regional processing nodes. If one node degrades, traffic reroutes automatically in &lt;500ms. No manual failover, no human intervention required.</p>
+      </div>
+      <div class="process-step p-6 reveal d4">
+        <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+          <span class="font-mono text-sm font-bold text-indigo-700">04</span>
+        </div>
+        <h3 class="font-semibold text-ink-900 mb-2">Confirm &amp; Log</h3>
+        <p class="text-sm text-ink-500 leading-relaxed">Cryptographically signed acknowledgements (999, 277CA). Immutable audit log across all nodes. Full transaction replay capability for compliance and dispute resolution.</p>
+      </div>
+    </div>
+
+    <!-- Node visualization -->
+    <div class="p-8 rounded-2xl bg-ink-900 text-white reveal">
+      <div class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-6 text-center">Distributed Node Architecture (vs. Change Healthcare Monolith)</div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="node-card bg-indigo-900 border-indigo-700">
+          <div class="text-xs text-indigo-400 font-bold mb-1">NODE 01</div>
+          <div class="text-sm text-white font-semibold">US-East</div>
+          <div class="text-xs text-indigo-300 mt-1">Primary</div>
+        </div>
+        <div class="node-card bg-indigo-900 border-indigo-700">
+          <div class="text-xs text-indigo-400 font-bold mb-1">NODE 02</div>
+          <div class="text-sm text-white font-semibold">US-West</div>
+          <div class="text-xs text-indigo-300 mt-1">Active/Active</div>
+        </div>
+        <div class="node-card bg-indigo-900 border-indigo-700">
+          <div class="text-xs text-indigo-400 font-bold mb-1">NODE 03</div>
+          <div class="text-sm text-white font-semibold">US-Central</div>
+          <div class="text-xs text-indigo-300 mt-1">Active/Active</div>
+        </div>
+        <div class="node-card bg-indigo-900 border-indigo-700">
+          <div class="text-xs text-indigo-400 font-bold mb-1">NODE 04</div>
+          <div class="text-sm text-white font-semibold">EU (GDPR)</div>
+          <div class="text-xs text-indigo-300 mt-1">Expansion</div>
+        </div>
+        <div class="node-card bg-violet-900 border-violet-700">
+          <div class="text-xs text-violet-400 font-bold mb-1">AI LAYER</div>
+          <div class="text-sm text-white font-semibold">Global</div>
+          <div class="text-xs text-violet-300 mt-1">Fraud + Validation</div>
+        </div>
+      </div>
+      <div class="mt-6 text-center text-sm text-ink-400">Any 3 of 4 regional nodes can process the full transaction load. The February 2024 scenario is architecturally impossible.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- MARKET -->
+<section id="market" class="py-28 bg-ink-50" aria-labelledby="h-market">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16 reveal">
+      <div class="slabel mb-3">Market Opportunity</div>
+      <h2 id="h-market" class="font-serif text-5xl text-ink-900 leading-tight mb-4">Replacing a<br><em class="text-indigo-600">$10B Monopoly</em></h2>
+      <div class="w-14 h-1 bg-gradient-to-r from-indigo-600 to-violet-400 rounded-full"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="glow-card p-6 reveal d1">
+        <div class="font-serif text-4xl text-indigo-600 mb-2">$10B+</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Clearinghouse Market</div>
+        <div class="text-xs text-ink-500">Dominated by Change Healthcare and Availity — both with legacy architecture and zero AI-native competition</div>
+      </div>
+      <div class="glow-card p-6 reveal d2">
+        <div class="font-serif text-4xl text-red-600 mb-2">$22B</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">UHG Market Cap Erosion</div>
+        <div class="text-xs text-ink-500">Overnight stock destruction from the breach — created the urgency for competitive alternatives that didn't exist before</div>
+      </div>
+      <div class="glow-card p-6 reveal d3">
+        <div class="font-serif text-4xl text-emerald-600 mb-2">15B</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Annual Transactions</div>
+        <div class="text-xs text-ink-500">Currently flowing through legacy clearinghouses — all of it at risk. Revenue model: $0.03–0.08 per transaction</div>
+      </div>
+      <div class="glow-card p-6 reveal d4">
+        <div class="font-serif text-4xl text-violet-600 mb-2">2026</div>
+        <div class="text-sm font-semibold text-ink-800 mb-1">Regulatory Deadline</div>
+        <div class="text-xs text-ink-500">Proposed CMS rules requiring payer redundancy create a hard switch window — the market MUST procure alternatives</div>
+      </div>
+    </div>
+
+    <div class="card p-8 reveal">
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div>
+          <div class="slabel mb-2">Revenue Model</div>
+          <h3 class="font-serif text-2xl text-ink-900 mb-3">Per-Transaction + SaaS</h3>
+          <p class="text-sm text-ink-500 leading-relaxed">$0.05 average per claim transaction × 15B annual transactions = $750M TAM at full penetration. Add SaaS platform fee for advanced fraud analytics and the model becomes extremely high margin.</p>
+        </div>
+        <div>
+          <div class="slabel mb-2">Competitive Moat</div>
+          <h3 class="font-serif text-2xl text-ink-900 mb-3">Trust + Compliance + Scale</h3>
+          <p class="text-sm text-ink-500 leading-relaxed">Clearinghouses are trust infrastructure — switching costs are enormous once a payer or provider connects. First-mover post-breach advantage, with regulatory tailwinds forcing migration away from legacy players.</p>
+        </div>
+        <div>
+          <div class="slabel mb-2">Entry Strategy</div>
+          <h3 class="font-serif text-2xl text-ink-900 mb-3">Niche Payers First</h3>
+          <p class="text-sm text-ink-500 leading-relaxed">Target regional payers and TPAs (Third-Party Administrators) first — they have the most urgency post-breach and the least inertia. Land 10 payers, build the trust record, then compete for UHG/Anthem connections.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="py-20 bg-ink-900 relative overflow-hidden" aria-label="Contact">
+  <div class="absolute inset-0 grid-bg opacity-10" aria-hidden="true"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+    <div class="reveal">
+      <div class="slabel mb-4" style="color:#818cf8">Concept Discussion</div>
+      <h2 class="font-serif text-5xl text-white mb-6">The Market Needs This Now</h2>
+      <p class="text-ink-400 text-lg mb-8 max-w-2xl mx-auto">The Change Healthcare attack created a once-in-a-generation window to replace broken infrastructure. Payers, investors, and technical co-founders — the blueprint is ready.</p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="mailto:contact@venture.dev" class="btn-indigo">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Request Deck
+        </a>
+        <a href="../" class="btn-outline" style="color:#fff;border-color:#475569">View Full Portfolio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-ink-950 py-8" role="contentinfo">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <a href="../" class="font-serif text-2xl font-bold text-white">CW.</a>
+    <p class="text-xs text-ink-500">&copy; 2026 Venture Studio &middot; Concept Blueprint &middot; All rights reserved</p>
+    <a href="../" class="text-xs text-ink-500 hover:text-white transition-colors">Back to Portfolio</a>
+  </div>
+</footer>
+
+<script>
+  const ham = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  if(ham && menu) ham.addEventListener('click', () => menu.classList.toggle('open'));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  const spotlight = document.getElementById('hero-spotlight');
+  if(spotlight) {
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      spotlight.style.background = `radial-gradient(800px circle at ${x}% ${y}%, rgba(79,70,229,.06), transparent 60%)`;
+    });
+  }
+</script>
+</body>
+</html>
